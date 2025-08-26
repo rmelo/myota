@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Container, createListCollection, Flex, Heading, HStack, Input, Portal, Select, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, createListCollection, Flex, Grid, Heading, HStack, Input, Portal, Select, Stack, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,9 +46,9 @@ export default function Home() {
   }
 
   return (
-    <Container border="1px solid" borderColor="red.200">
+    <Container>
       {/* Header */}
-      <Flex justify="space-between" align="center" py="8" border="1px solid" borderColor="blue.200">
+      <Flex justify="space-between" align="center" py="8">
         <Box>
           <Image src="https://www.plataforma10.com.ar/publicAssets/images/Plataforma-10-Logo.svg" alt="logo" width={160} height={160} />
         </Box>
@@ -89,97 +89,214 @@ export default function Home() {
           </Box>
         </HStack>
       </Flex>
-      {/* Body */}
-      <Flex justify="space-between" align="center" borderRadius="lg" border="1px solid" borderColor="green.200">
-        <Stack gap="0" direction={[]}>
-          <Box>
+      {/* Responsive Search Bar */}
+      <Box
+        borderRadius="lg"
+        bg="white"
+        shadow="sm"
+        overflow="hidden"
+      >
+        <Grid
+          templateColumns={{
+            base: "1fr",                     // Small: 1 column (stacked)
+            md: "1fr 1fr 1fr auto",          // Medium: 3 columns + search button
+            lg: "1fr 1fr 1fr 1fr 1fr auto"   // Large: 5 columns + search button
+          }}
+          templateRows={{
+            base: "auto auto auto auto auto", // Small: 5 rows (including search)
+            md: "auto auto",                  // Medium: 2 rows
+            lg: "auto"                        // Large: 1 row
+          }}
+          gap={{
+            base: "4",                 // Small: gap between groups
+            md: "0",                   // Medium: no gap (borders handle separation)
+            lg: "0"                    // Large: no gap (borders handle separation)
+          }}
+        >
+          {/* Origin - Row 1 on small, Group 1 */}
+          <Box
+            gridColumn={{ base: "1", md: "1", lg: "1" }}
+            gridRow={{ base: "1", md: "1", lg: "1" }}
+            borderRight={{ lg: "1px solid" }}
+            borderRightColor={{ lg: "gray.200" }}
+            borderBottom={{ md: "1px solid", lg: "none" }}
+            borderBottomColor={{ md: "gray.200", lg: "transparent" }}
+            border={{ base: "1px solid" }}
+            borderColor={{ base: "gray.200" }}
+            borderRadius={{ base: "lg", md: "none", lg: "none" }}
+          >
             <Box p="4">
-              <Stack gap="0">
+              <Stack gap="1">
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">Origin</Text>
                 <Input
                   placeholder="São Paulo, BR"
                   fontSize="md"
                   variant="flushed"
                   borderBottomWidth={0}
+                  fontWeight="medium"
                 />
               </Stack>
             </Box>
           </Box>
-          <Box>
-            <Box p="4" >
-              <Stack gap="0">
+
+          {/* Destination - Row 2 on small, Group 1 */}
+          <Box
+            gridColumn={{ base: "1", md: "2", lg: "2" }}
+            gridRow={{ base: "2", md: "1", lg: "1" }}
+            borderRight={{ lg: "1px solid" }}
+            borderRightColor={{ lg: "gray.200" }}
+            borderBottom={{ md: "1px solid", lg: "none" }}
+            borderBottomColor={{ md: "gray.200", lg: "transparent" }}
+            border={{ base: "1px solid" }}
+            borderColor={{ base: "gray.200" }}
+            borderRadius={{ base: "lg", md: "none", lg: "none" }}
+          >
+            <Box p="4">
+              <Stack gap="1">
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">Destination</Text>
                 <Input
                   placeholder="Rio de Janeiro, BR"
                   fontSize="md"
                   variant="flushed"
                   borderBottomWidth={0}
+                  fontWeight="medium"
                 />
               </Stack>
             </Box>
           </Box>
-        </Stack>
-        <Box>
-          <DatePicker
-            value={checkInDate}
-            onChange={setCheckInDate}
-            minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
-            colorPallet="red"
-            showToday={false}
-            showPrevBeforeMinDate={false}
-            children={<Box p="4">
-              <Stack gap="0">
-                <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkInDate')}</Text>
-                <Input
-                  placeholder={checkInDate?.toLocaleDateString(i18n.language) ?? '-'}
-                  fontSize="md"
-                  variant="flushed"
-                  borderBottomWidth={0}
-                  readOnly
-                />
-              </Stack>
-            </Box>}
-          />
-        </Box>
-        <Box>
-          <DatePicker
-            value={checkOutDate}
-            onChange={setCheckOutDate}
-            minDate={checkInDate || new Date()}
-            rangeStart={checkInDate}
-            rangeEnd={checkOutDate}
-            colorPallet="red"
-            closeOnSelect={false}
-            showToday={false}
-            showPrevBeforeMinDate={false}
-            children={<Box p="4">
-              <Stack gap="0">
-                <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkOutDate')}</Text>
-                <Input
-                  placeholder={checkOutDate?.toLocaleDateString(i18n.language) ?? '-'}
-                  fontSize="md"
-                  variant="flushed"
-                  borderBottomWidth={0}
-                  readOnly
-                />
-              </Stack>
-            </Box>}
-          />
-        </Box>
-        <Box>
-          <Box p="4" >
-            <Stack gap="0">
-              <Text fontSize="sm" color="gray.600" fontWeight="medium">Passengers</Text>
-              <Input
-                placeholder="1 Passenger"
-                fontSize="md"
-                variant="flushed"
-                borderBottomWidth={0}
+
+          {/* Dates Section - Row 3 on small (combined), Group 2 */}
+          <Box
+            gridColumn={{ base: "1", md: "1 / 3", lg: "3 / 5" }}
+            gridRow={{ base: "3", md: "2", lg: "1" }}
+            border={{ base: "1px solid" }}
+            borderColor={{ base: "gray.200" }}
+            borderRadius={{ base: "lg", md: "none", lg: "none" }}
+            borderRight={{ md: "1px solid", lg: "none" }}
+            borderRightColor={{ md: "gray.200", lg: "transparent" }}
+            display={{ base: "block", md: "grid", lg: "contents" }}
+            gridTemplateColumns={{ md: "1fr 1fr" }}
+          >
+            {/* Date Picker */}
+            <Box
+              gridColumn={{ md: "1", lg: "3" }}
+              gridRow={{ md: "1", lg: "1" }}
+              borderRight={{ md: "1px solid", lg: "1px solid" }}
+              borderRightColor={{ md: "gray.200", lg: "gray.200" }}
+              borderBottom={{ base: "1px solid", md: "none", lg: "none" }}
+              borderBottomColor={{ base: "gray.200", md: "transparent", lg: "transparent" }}
+            >
+              <DatePicker
+                value={checkInDate}
+                onChange={setCheckInDate}
+                minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
+                colorPallet="red"
+                showToday={false}
+                showPrevBeforeMinDate={false}
+                children={
+                  <Box p="4" cursor="pointer">
+                    <Stack gap="1">
+                      <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkInDate')}</Text>
+                      <Text fontSize="md" fontWeight="medium" color={checkInDate ? "black" : "gray.400"}>
+                        {checkInDate?.toLocaleDateString(i18n.language) ?? 'Select date'}
+                      </Text>
+                    </Stack>
+                  </Box>
+                }
               />
-            </Stack>
+            </Box>
+
+            {/* Return Date Picker */}
+            <Box
+              gridColumn={{ md: "2", lg: "4" }}
+              gridRow={{ md: "1", lg: "1" }}
+              borderRight={{ lg: "1px solid" }}
+              borderRightColor={{ lg: "gray.200" }}
+            >
+              <DatePicker
+                value={checkOutDate}
+                onChange={setCheckOutDate}
+                minDate={checkInDate || new Date()}
+                rangeStart={checkInDate}
+                rangeEnd={checkOutDate}
+                colorPallet="red"
+                closeOnSelect={false}
+                showToday={false}
+                showPrevBeforeMinDate={false}
+                children={
+                  <Box p="4" cursor="pointer">
+                    <Stack gap="1">
+                      <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkOutDate')}</Text>
+                      <Text fontSize="md" fontWeight="medium" color={checkOutDate ? "black" : "gray.400"}>
+                        {checkOutDate?.toLocaleDateString(i18n.language) ?? 'Optional'}
+                      </Text>
+                    </Stack>
+                  </Box>
+                }
+              />
+            </Box>
           </Box>
-        </Box>
-      </Flex>
+
+          {/* Passengers - Row 4 on small, Group 3 */}
+          <Box
+            gridColumn={{ base: "1", md: "3", lg: "5" }}
+            gridRow={{ base: "4", md: "2", lg: "1" }}
+            border={{ base: "1px solid" }}
+            borderColor={{ base: "gray.200" }}
+            borderRadius={{ base: "lg", md: "none", lg: "none" }}
+            borderRight={{ lg: "1px solid" }}
+            borderRightColor={{ lg: "gray.200" }}
+          >
+            <Box p="4">
+              <Stack gap="1">
+                <Text fontSize="sm" color="gray.600" fontWeight="medium">Passengers</Text>
+                <Input
+                  placeholder="1 passenger"
+                  fontSize="md"
+                  variant="flushed"
+                  borderBottomWidth={0}
+                  fontWeight="medium"
+                />
+              </Stack>
+            </Box>
+          </Box>
+
+          {/* Search Button */}
+          <Box
+            gridColumn={{ base: "1", md: "4", lg: "6" }}
+            gridRow={{ base: "5", md: "1 / -1", lg: "1" }}
+            display="flex"
+            alignItems="center"
+            p={{ base: "0", md: "2", lg: "2" }}
+          >
+            <Box
+              as="button"
+              bg="blue.500"
+              color="white"
+              borderRadius="md"
+              px="6"
+              py="3"
+              fontWeight="semibold"
+              fontSize={{ base: "md", md: "sm", lg: "md" }}
+              w="full"
+              h={{ base: "12", md: "full", lg: "full" }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              gap="2"
+              _hover={{ bg: "blue.600" }}
+              _active={{ bg: "blue.700" }}
+              cursor="pointer"
+              transition="all 0.2s"
+            >
+              <Box as="span" fontSize="lg">
+                🔍
+              </Box>
+              Search
+            </Box>
+          </Box>
+        </Grid>
+      </Box>
       {/* Footer */}
       {
         checkInDate && checkOutDate && (
