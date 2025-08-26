@@ -127,9 +127,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
     const getLastSundayOfMonth = (month: number, year: number): Date => {
         const lastDay = new Date(year, month + 1, 0)
-        const dayOfWeek = lastDay.getDay()
-        const daysBackToSunday = dayOfWeek === 0 ? 0 : dayOfWeek
-        return new Date(year, month + 1, 0 - daysBackToSunday)
+        const daysInMonth = lastDay.getDate()
+
+        // Start from the last day and work backwards to find the last Sunday
+        for (let day = daysInMonth; day >= 1; day--) {
+            const date = new Date(year, month, day)
+            if (date.getDay() === 0) { // Sunday
+                return date
+            }
+        }
+
+        // Fallback (shouldn't happen)
+        return new Date(year, month, 1)
     }
 
     const getFirstSaturdayOfMonth = (month: number, year: number): Date => {
@@ -141,9 +150,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
     const getLastSaturdayOfMonth = (month: number, year: number): Date => {
         const lastDay = new Date(year, month + 1, 0)
-        const dayOfWeek = lastDay.getDay()
-        const daysBackToSaturday = dayOfWeek === 6 ? 0 : dayOfWeek
-        return new Date(year, month + 1, 0 - daysBackToSaturday)
+        const daysInMonth = lastDay.getDate()
+
+        // Start from the last day and work backwards to find the last Saturday
+        for (let day = daysInMonth; day >= 1; day--) {
+            const date = new Date(year, month, day)
+            if (date.getDay() === 6) { // Saturday
+                return date
+            }
+        }
+
+        // Fallback (shouldn't happen)
+        return new Date(year, month, 1)
     }
 
     const handleDateSelect = (day: number) => {
@@ -179,7 +197,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
         // Empty cells for days before the first day of the month
         for (let i = 0; i < firstDay; i++) {
-            days.push(<Box key={`empty-${i}`} />)
+            days.push(
+                <Box key={`empty-${i}`}>
+                    <Box h="12" minW="12" />
+                </Box>
+            )
         }
 
         // Days of the month
@@ -194,22 +216,50 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             const isFirstSaturdayOfMonth = date.getDate() === getFirstSaturdayOfMonth(currentMonth, currentYear).getDate()
             const isLastSaturdayOfMonth = date.getDate() === getLastSaturdayOfMonth(currentMonth, currentYear).getDate()
 
+            // Determine weekend styling
+            let weekendBg = undefined
+            let borderTopRadius = undefined
+            let borderBottomRadius = undefined
+
+            if (weekend) {
+                weekendBg = "gray.100"
+                if ((isSunday(date) && isFirstSundayOfMonth) || (isSaturday(date) && isFirstSaturdayOfMonth)) {
+                    borderTopRadius = "full"
+                }
+                if ((isSunday(date) && isLastSundayOfMonth) || (isSaturday(date) && isLastSaturdayOfMonth)) {
+                    borderBottomRadius = "full"
+                }
+            }
+
+            const size = "12"
+
             days.push(
-                <Button
-                    key={day}
-                    size="sm"
-                    variant={selected ? "solid" : "ghost"}
-                    colorPalette={selected ? "blue" : undefined}
-                    bg={weekend && !selected ? "gray.200" : undefined}
-                    _hover={!disabled ? { bg: selected ? "blue.600" : "gray.100" } : {}}
-                    disabled={disabled}
-                    onClick={() => handleDateSelect(day)}
-                    fontSize="sm"
-                    h="8"
-                    minW="8"
+                <Box key={day}
+                    p="4"
+                    w={size}
+                    h={size}
+                    borderTopRadius={borderTopRadius}
+                    borderBottomRadius={borderBottomRadius}
+                    bg={weekendBg}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
                 >
-                    {day}
-                </Button>
+                    <Button
+                        size="sm"
+                        variant={selected ? "solid" : "ghost"}
+                        colorPalette={selected ? "blue" : undefined}
+                        _hover={!disabled ? { bg: selected ? "blue.600" : "gray.200" } : {}}
+                        disabled={disabled}
+                        onClick={() => handleDateSelect(day)}
+                        fontSize="sm"
+                        rounded="full"
+                        w={size}
+                        h={size}
+                    >
+                        {day}
+                    </Button>
+                </Box>
             )
         }
 
@@ -237,7 +287,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 </Box>
             </Popover.Trigger>
             <Popover.Positioner>
-                <Popover.Content w="300px" p="4">
+                <Popover.Content w="fit-content" minW="280px" p="4">
                     <Popover.Body>
                         <VStack gap="4">
                             {/* Month/Year Navigation */}
@@ -275,7 +325,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             </Grid>
 
                             {/* Calendar Days */}
-                            <Grid templateColumns="repeat(7, 1fr)" gap="0" w="full">
+                            <Grid templateColumns="repeat(7, 1fr)" gap="0" w="full" minW="252px">
                                 {renderCalendarDays()}
                             </Grid>
 
