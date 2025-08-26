@@ -49,7 +49,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     maxDate,
     rangeStart,
     rangeEnd,
-    colorPallet = "blue",
+    colorPallet = "black",
     closeOnSelect = true,
     showToday = true,
     showPrevBeforeMinDate = false,
