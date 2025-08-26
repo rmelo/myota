@@ -97,6 +97,10 @@ export default function Search({ color }: SearchProps) {
         const onChange = field === 'date' ? setDepartureDate : setReturnDate;
         const minDate = field === 'returnDate' ? departureDate : undefined;
 
+        // For return date calendar, show range selection with departure date as range start
+        const rangeStart = field === 'returnDate' ? departureDate : undefined;
+        const rangeEnd = field === 'returnDate' ? returnDate : undefined;
+
         return (
             <Field label={t(fieldConfig.labelKey)}>
                 <Calendar
@@ -105,6 +109,8 @@ export default function Search({ color }: SearchProps) {
                     placeholder={t(fieldConfig.placeholderKey)}
                     colorPallet={color}
                     minDate={minDate}
+                    rangeStart={rangeStart}
+                    rangeEnd={rangeEnd}
                 >
                     <FlatInput
                         value={value ? value.toLocaleDateString() : ''}
