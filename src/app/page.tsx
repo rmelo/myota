@@ -98,6 +98,7 @@ export default function Home() {
                       onChange={setCheckInDate}
                       minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
                       colorPallet="pink"
+                      showToday={false}
                     />
                   </Box>
                   <Box flex="1">
@@ -109,6 +110,8 @@ export default function Home() {
                       rangeStart={checkInDate}
                       rangeEnd={checkOutDate}
                       colorPallet="pink"
+                      closeOnSelect={false}
+                      showToday={false}
                     />
                   </Box>
                 </HStack>

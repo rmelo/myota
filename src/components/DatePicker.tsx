@@ -28,6 +28,10 @@ interface DatePickerProps {
     rangeStart?: Date
     rangeEnd?: Date
     colorPallet?: string
+    // Calendar behavior
+    closeOnSelect?: boolean
+    showToday?: boolean
+    showPrevBeforeMinDate?: boolean
 }
 
 
@@ -41,7 +45,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     maxDate,
     rangeStart,
     rangeEnd,
-    colorPallet = "blue"
+    colorPallet = "blue",
+    closeOnSelect = true,
+    showToday = true,
+    showPrevBeforeMinDate = false
 }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
@@ -151,6 +158,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         )
     }
 
+    const isCurrentMonthBeforeMinDate = (): boolean => {
+        if (!minDate) return false
+        const currentMonthStart = new Date(currentYear, currentMonth, 1)
+        const minMonthStart = new Date(minDate.getFullYear(), minDate.getMonth(), 1)
+        return currentMonthStart < minMonthStart
+    }
+
     const getFirstSundayOfMonth = (month: number, year: number): Date => {
         const firstDay = new Date(year, month, 1)
         const dayOfWeek = firstDay.getDay()
@@ -201,7 +215,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         const selectedDate = new Date(currentYear, currentMonth, day)
         if (!isDateDisabled(selectedDate)) {
             onChange?.(selectedDate)
-            setIsOpen(false)
+            if (closeOnSelect) {
+                setIsOpen(false)
+            }
         }
     }
 
@@ -280,7 +296,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             }
 
             if (inRange)
-                boxRangeBg = `${colorPallet}.100/40`
+                boxRangeBg = `${colorPallet}.200/50`
 
             if (rangeStart || rangeEnd)
                 buttonBg = `${colorPallet}.500`
@@ -327,6 +343,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             w={size}
                             h={size}
                             color={rangeStart || rangeEnd || selected ? "white" : undefined}
+                            fontWeight={today && !selected ? "bold" : undefined}
                         >
                             {day}
                         </Button>
@@ -359,19 +376,24 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 </Box>
             </Popover.Trigger>
             <Popover.Positioner>
-                <Popover.Content w="fit-content" minW="280px" p="4">
+                <Popover.Content w="fit-content" minW="280px" p="4" rounded="4xl">
                     <Popover.Body>
                         <VStack gap="4">
                             {/* Month/Year Navigation */}
                             <HStack justify="space-between" w="full">
-                                <IconButton
-                                    aria-label="Previous month"
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => navigateMonth('prev')}
-                                >
-                                    <ChevronLeftIcon />
-                                </IconButton>
+                                {(showPrevBeforeMinDate || !isCurrentMonthBeforeMinDate()) && (
+                                    <IconButton
+                                        aria-label="Previous month"
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => navigateMonth('prev')}
+                                    >
+                                        <ChevronLeftIcon />
+                                    </IconButton>
+                                )}
+                                {(!showPrevBeforeMinDate && isCurrentMonthBeforeMinDate()) && (
+                                    <Box w="8" h="8" /> /* Placeholder to maintain spacing */
+                                )}
                                 <Text fontSize="sm" fontWeight="semibold">
                                     {MONTHS[currentMonth]} {currentYear}
                                 </Text>
@@ -402,22 +424,22 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             </Grid>
 
                             {/* Today Button */}
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => {
-                                    const today = new Date()
-                                    setCurrentMonth(today.getMonth())
-                                    setCurrentYear(today.getFullYear())
-                                    if (!isDateDisabled(today)) {
-                                        onChange?.(today)
-                                        setIsOpen(false)
-                                    }
-                                }}
-                                w="full"
-                            >
-                                {t('datePicker.today')}
-                            </Button>
+                            {showToday && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const today = new Date()
+                                        setCurrentMonth(today.getMonth())
+                                        setCurrentYear(today.getFullYear())
+                                        // Only navigate to today's month/year, don't select the date
+                                    }}
+                                    w="full"
+                                    rounded="full"
+                                >
+                                    {t('datePicker.today')}
+                                </Button>
+                            )}
                         </VStack>
                     </Popover.Body>
                 </Popover.Content>
