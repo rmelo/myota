@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
     en: {
         translation: {
-            datePicker: {
+            calendar: {
                 placeholder: "Select date",
                 today: "Today",
                 months: {
@@ -37,13 +37,13 @@ const resources = {
             },
             demo: {
                 title: "Online Travel Agency",
-                datePickerDemo: "DatePicker Component Demo",
+                calendarDemo: "calendar Component Demo",
                 basicDateSelection: "Basic Date Selection:",
                 travelBookingExample: "Travel Booking Example:",
                 checkInDate: "Date:",
                 checkOutDate: "Return Date:",
-                disabledDatePicker: "Disabled DatePicker:",
-                disabledPlaceholder: "This datepicker is disabled",
+                disabledcalendar: "Disabled calendar:",
+                disabledPlaceholder: "This calendar is disabled",
                 bookingSummary: "Booking Summary:",
                 selected: "Selected:",
                 checkIn: "Check-in:",
@@ -63,7 +63,7 @@ const resources = {
     },
     es: {
         translation: {
-            datePicker: {
+            calendar: {
                 placeholder: "Seleccionar fecha",
                 today: "Hoy",
                 months: {
@@ -94,12 +94,12 @@ const resources = {
             },
             demo: {
                 title: "Agencia de Viajes Online",
-                datePickerDemo: "Demostración del Componente DatePicker",
+                calendarDemo: "Demostración del Componente calendar",
                 basicDateSelection: "Selección Básica de Fecha:",
                 travelBookingExample: "Ejemplo de Reserva de Viaje:",
                 checkInDate: "Fecha:",
                 checkOutDate: "Fecha de regreso:",
-                disabledDatePicker: "DatePicker Deshabilitado:",
+                disabledcalendar: "calendar Deshabilitado:",
                 disabledPlaceholder: "Este selector de fecha está deshabilitado",
                 bookingSummary: "Resumen de Reserva:",
                 selected: "Seleccionado:",
@@ -120,7 +120,7 @@ const resources = {
     },
     fr: {
         translation: {
-            datePicker: {
+            calendar: {
                 placeholder: "Sélectionner une date",
                 today: "Aujourd'hui",
                 months: {
@@ -151,12 +151,12 @@ const resources = {
             },
             demo: {
                 title: "Agence de Voyage en Ligne",
-                datePickerDemo: "Démonstration du Composant DatePicker",
+                calendarDemo: "Démonstration du Composant calendar",
                 basicDateSelection: "Sélection de Date Basique:",
                 travelBookingExample: "Exemple de Réservation de Voyage:",
                 checkInDate: "Date:",
                 checkOutDate: "Date de retour:",
-                disabledDatePicker: "DatePicker Désactivé:",
+                disabledcalendar: "calendar Désactivé:",
                 disabledPlaceholder: "Ce sélecteur de date est désactivé",
                 bookingSummary: "Résumé de Réservation:",
                 selected: "Sélectionné:",
@@ -177,7 +177,7 @@ const resources = {
     },
     de: {
         translation: {
-            datePicker: {
+            calendar: {
                 placeholder: "Datum auswählen",
                 today: "Heute",
                 months: {
@@ -208,12 +208,12 @@ const resources = {
             },
             demo: {
                 title: "Online-Reisebüro",
-                datePickerDemo: "DatePicker-Komponenten-Demo",
+                calendarDemo: "calendar-Komponenten-Demo",
                 basicDateSelection: "Grundlegende Datumsauswahl:",
                 travelBookingExample: "Reisebuchungsbeispiel:",
                 checkInDate: "Datum:",
                 checkOutDate: "Rückreisedatum:",
-                disabledDatePicker: "Deaktivierter DatePicker:",
+                disabledcalendar: "Deaktivierter calendar:",
                 disabledPlaceholder: "Dieser Datumsauswähler ist deaktiviert",
                 bookingSummary: "Buchungszusammenfassung:",
                 selected: "Ausgewählt:",
@@ -234,7 +234,7 @@ const resources = {
     },
     pt: {
         translation: {
-            datePicker: {
+            calendar: {
                 placeholder: "Selecionar data",
                 today: "Hoje",
                 months: {
@@ -265,12 +265,12 @@ const resources = {
             },
             demo: {
                 title: "Agência de Viagens Online",
-                datePickerDemo: "Demonstração do Componente DatePicker",
+                calendarDemo: "Demonstração do Componente calendar",
                 basicDateSelection: "Seleção Básica de Data:",
                 travelBookingExample: "Exemplo de Reserva de Viagem:",
                 checkInDate: "Data:",
                 checkOutDate: "Data de retorno:",
-                disabledDatePicker: "DatePicker Desabilitado:",
+                disabledcalendar: "calendar Desabilitado:",
                 disabledPlaceholder: "Este seletor de data está desabilitado",
                 bookingSummary: "Resumo da Reserva:",
                 selected: "Selecionado:",

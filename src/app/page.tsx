@@ -4,7 +4,7 @@ import { Box, Container, createListCollection, Flex, Grid, Heading, HStack, Inpu
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DatePicker } from "../components/DatePicker";
+import { Calendar } from "../components/Calendar/Calendar";
 
 export default function Home() {
   const { t, i18n, ready } = useTranslation();
@@ -221,7 +221,7 @@ export default function Home() {
               borderBottom={{ base: "1px solid", md: "none", lg: "none" }}
               borderBottomColor={{ base: "gray.200", md: "transparent", lg: "transparent" }}
             >
-              <DatePicker
+              <Calendar
                 value={checkInDate}
                 onChange={setCheckInDate}
                 minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
@@ -248,7 +248,7 @@ export default function Home() {
               borderRight={{ lg: "1px solid" }}
               borderRightColor={{ lg: "gray.200" }}
             >
-              <DatePicker
+              <Calendar
                 value={checkOutDate}
                 onChange={setCheckOutDate}
                 minDate={checkInDate || new Date()}

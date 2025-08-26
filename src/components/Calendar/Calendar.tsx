@@ -17,7 +17,7 @@ import {
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface DatePickerProps {
+interface CalendarProps {
     value?: Date
     onChange?: (date: Date) => void
     placeholder?: string
@@ -38,7 +38,7 @@ interface DatePickerProps {
 
 
 
-export const DatePicker: React.FC<DatePickerProps> = ({
+export const Calendar: React.FC<CalendarProps> = ({
     value,
     onChange,
     placeholder,
@@ -60,28 +60,28 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     const inputRef = useRef<HTMLInputElement>(null)
 
     const MONTHS = [
-        t('datePicker.months.january'),
-        t('datePicker.months.february'),
-        t('datePicker.months.march'),
-        t('datePicker.months.april'),
-        t('datePicker.months.may'),
-        t('datePicker.months.june'),
-        t('datePicker.months.july'),
-        t('datePicker.months.august'),
-        t('datePicker.months.september'),
-        t('datePicker.months.october'),
-        t('datePicker.months.november'),
-        t('datePicker.months.december')
+        t('calendar.months.january'),
+        t('calendar.months.february'),
+        t('calendar.months.march'),
+        t('calendar.months.april'),
+        t('calendar.months.may'),
+        t('calendar.months.june'),
+        t('calendar.months.july'),
+        t('calendar.months.august'),
+        t('calendar.months.september'),
+        t('calendar.months.october'),
+        t('calendar.months.november'),
+        t('calendar.months.december')
     ]
 
     const WEEKDAYS = [
-        t('datePicker.weekdays.short.sunday'),
-        t('datePicker.weekdays.short.monday'),
-        t('datePicker.weekdays.short.tuesday'),
-        t('datePicker.weekdays.short.wednesday'),
-        t('datePicker.weekdays.short.thursday'),
-        t('datePicker.weekdays.short.friday'),
-        t('datePicker.weekdays.short.saturday')
+        t('calendar.weekdays.short.sunday'),
+        t('calendar.weekdays.short.monday'),
+        t('calendar.weekdays.short.tuesday'),
+        t('calendar.weekdays.short.wednesday'),
+        t('calendar.weekdays.short.thursday'),
+        t('calendar.weekdays.short.friday'),
+        t('calendar.weekdays.short.saturday')
     ]
 
     const formatDate = (date: Date): string => {
@@ -385,7 +385,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         <Input
                             ref={inputRef}
                             value={value ? formatDate(value) : ''}
-                            placeholder={placeholder || t('datePicker.placeholder')}
+                            placeholder={placeholder || t('calendar.placeholder')}
                             readOnly
                             disabled={disabled}
                             onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -457,7 +457,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                                     w="full"
                                     rounded="full"
                                 >
-                                    {t('datePicker.today')}
+                                    {t('calendar.today')}
                                 </Button>
                             )}
                         </VStack>
@@ -468,4 +468,4 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     )
 }
 
-export default DatePicker
+export default Calendar

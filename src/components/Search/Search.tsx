@@ -3,19 +3,17 @@
 import {
     Box,
     Button,
-    ColorPalette,
-    Container,
+    Flex,
     Grid,
     GridItem,
     HStack,
-    Icon,
     IconButton,
     Input,
     Stack,
-    Text,
+    Text
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { CgArrowsExchange, CgArrowsExchangeV } from "react-icons/cg";
+import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
 
 type SearchBarProps = {
     color?: string;
@@ -56,27 +54,7 @@ function useContainerBreakpoint() {
     return { containerRef, layout };
 }
 
-/** Demo page wrapper */
-export default function SearchBarPage() {
-    const color: ColorPalette = "red";
-    return (
-        <Container mt={4}>
-            <Stack gap={4} >
-                <Box p={4} bg={`${color}.50`}>
-                    <ResponsiveSearch color={color} />
-                </Box>
-                <Box p={4} bg={`${color}.50`} width="700px">
-                    <ResponsiveSearch color={color} />
-                </Box>
-                <Box p={4} bg={`${color}.50`} width="400px">
-                    <ResponsiveSearch color={color} />
-                </Box>
-            </Stack>
-        </Container>
-    );
-}
-
-function ResponsiveSearch({ color }: SearchBarProps) {
+export default function Search({ color }: SearchBarProps) {
     const { containerRef, layout } = useContainerBreakpoint();
 
     return (
@@ -100,14 +78,11 @@ function ResponsiveSearch({ color }: SearchBarProps) {
                                     <FlatInput placeholder="Leaving from..." />
                                 </Field>
                             </Cell>
-
                             <Cell>
                                 <Field label="Destination">
                                     <FlatInput placeholder="Going to..." />
                                 </Field>
                             </Cell>
-
-                            {/* keep the absolute swap on small, but it won't cover text due to row layout */}
                             <SwapBtnAbsolute />
                         </Grid>
                     </GroupCard>
@@ -146,15 +121,7 @@ function ResponsiveSearch({ color }: SearchBarProps) {
                             variant="solid"
                             colorPalette={color}
                         >
-                            <Icon mr="2">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        fill="currentColor"
-                                        d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"
-                                    />
-                                </svg>
-                            </Icon>
-                            Search
+                            <CgSearch />Search
                         </Button>
                     </GridItem>
                 </Grid>
@@ -231,15 +198,7 @@ function ResponsiveSearch({ color }: SearchBarProps) {
                                     colorPalette={color}
                                     display="block"
                                 >
-                                    <Icon mr="2">
-                                        <svg viewBox="0 0 24 24">
-                                            <path
-                                                fill="currentColor"
-                                                d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"
-                                            />
-                                        </svg>
-                                    </Icon>
-                                    Search
+                                    <CgSearch />Search
                                 </Button>
                             </GridItem>
                         </Grid>
@@ -308,15 +267,9 @@ function ResponsiveSearch({ color }: SearchBarProps) {
                                 colorPalette={color}
                                 display="block"
                             >
-                                <Icon mr="2">
-                                    <svg viewBox="0 0 24 24">
-                                        <path
-                                            fill="currentColor"
-                                            d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"
-                                        />
-                                    </svg>
-                                </Icon>
-                                Search
+                                <Flex gap={2}>
+                                    <CgSearch />Search
+                                </Flex>
                             </Button>
                         </GridItem>
                     </Grid>
