@@ -99,6 +99,7 @@ export default function Home() {
                       minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
                       colorPallet="pink"
                       showToday={false}
+                      showPrevBeforeMinDate={false}
                     />
                   </Box>
                   <Box flex="1">
@@ -112,6 +113,7 @@ export default function Home() {
                       colorPallet="pink"
                       closeOnSelect={false}
                       showToday={false}
+                      showPrevBeforeMinDate={false}
                     />
                   </Box>
                 </HStack>

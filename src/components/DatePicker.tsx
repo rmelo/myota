@@ -158,11 +158,23 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         )
     }
 
-    const isCurrentMonthBeforeMinDate = (): boolean => {
-        if (!minDate) return false
-        const currentMonthStart = new Date(currentYear, currentMonth, 1)
+    const canNavigateToPreviousMonth = (): boolean => {
+        if (!minDate) return true
+
+        // Calculate what the previous month would be
+        let prevMonth = currentMonth - 1
+        let prevYear = currentYear
+
+        if (prevMonth < 0) {
+            prevMonth = 11
+            prevYear = currentYear - 1
+        }
+
+        // Check if the previous month is before minDate
+        const prevMonthStart = new Date(prevYear, prevMonth, 1)
         const minMonthStart = new Date(minDate.getFullYear(), minDate.getMonth(), 1)
-        return currentMonthStart < minMonthStart
+
+        return prevMonthStart >= minMonthStart
     }
 
     const getFirstSundayOfMonth = (month: number, year: number): Date => {
@@ -245,10 +257,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         const days: React.ReactNode[] = []
 
         // Empty cells for days before the first day of the month
+        const boxSize = "12"
         for (let i = 0; i < firstDay; i++) {
             days.push(
                 <Box key={`empty-${i}`}>
-                    <Box h="12" minW="12" />
+                    <Box h={boxSize} minW={boxSize} />
                 </Box>
             )
         }
@@ -307,13 +320,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             if (rangeEnd)
                 borderRightRadius = "full"
 
-            const size = "12"
-
             days.push(
                 <Box key={day}
-                    p="4"
-                    w={size}
-                    h={size}
+                    p="0"
+                    w={boxSize}
+                    h={boxSize}
                     borderTopRadius={borderTopRadius}
                     borderBottomRadius={borderBottomRadius}
                     bg={boxBg}
@@ -340,8 +351,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             onClick={() => handleDateSelect(day)}
                             fontSize="sm"
                             rounded="full"
-                            w={size}
-                            h={size}
+                            w={boxSize}
+                            h={boxSize}
                             color={rangeStart || rangeEnd || selected ? "white" : undefined}
                             fontWeight={today && !selected ? "bold" : undefined}
                         >
@@ -372,6 +383,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         onClick={() => !disabled && setIsOpen(!isOpen)}
                         cursor={disabled ? 'not-allowed' : 'pointer'}
                         pr="10"
+
                     />
                 </Box>
             </Popover.Trigger>
@@ -381,7 +393,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         <VStack gap="4">
                             {/* Month/Year Navigation */}
                             <HStack justify="space-between" w="full">
-                                {(showPrevBeforeMinDate || !isCurrentMonthBeforeMinDate()) && (
+                                {(showPrevBeforeMinDate || canNavigateToPreviousMonth()) && (
                                     <IconButton
                                         aria-label="Previous month"
                                         size="sm"
@@ -391,7 +403,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                                         <ChevronLeftIcon />
                                     </IconButton>
                                 )}
-                                {(!showPrevBeforeMinDate && isCurrentMonthBeforeMinDate()) && (
+                                {(!showPrevBeforeMinDate && !canNavigateToPreviousMonth()) && (
                                     <Box w="8" h="8" /> /* Placeholder to maintain spacing */
                                 )}
                                 <Text fontSize="sm" fontWeight="semibold">
