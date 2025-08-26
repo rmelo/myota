@@ -24,6 +24,10 @@ interface DatePickerProps {
     disabled?: boolean
     minDate?: Date
     maxDate?: Date
+    // Range selection props
+    rangeStart?: Date
+    rangeEnd?: Date
+    colorPallet?: string
 }
 
 
@@ -35,6 +39,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     disabled = false,
     minDate,
     maxDate,
+    rangeStart,
+    rangeEnd,
+    colorPallet = "blue"
 }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
@@ -116,6 +123,32 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
     const isSaturday = (date: Date): boolean => {
         return date.getDay() === 6
+    }
+
+    const isInRange = (date: Date): boolean => {
+        if (!rangeStart || !rangeEnd) return false
+        const dateTime = date.getTime()
+        const startTime = rangeStart.getTime()
+        const endTime = rangeEnd.getTime()
+        return dateTime >= startTime && dateTime <= endTime
+    }
+
+    const isRangeStart = (date: Date): boolean => {
+        if (!rangeStart) return false
+        return (
+            date.getDate() === rangeStart.getDate() &&
+            date.getMonth() === rangeStart.getMonth() &&
+            date.getFullYear() === rangeStart.getFullYear()
+        )
+    }
+
+    const isRangeEnd = (date: Date): boolean => {
+        if (!rangeEnd) return false
+        return (
+            date.getDate() === rangeEnd.getDate() &&
+            date.getMonth() === rangeEnd.getMonth() &&
+            date.getFullYear() === rangeEnd.getFullYear()
+        )
     }
 
     const getFirstSundayOfMonth = (month: number, year: number): Date => {
@@ -216,13 +249,28 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             const isFirstSaturdayOfMonth = date.getDate() === getFirstSaturdayOfMonth(currentMonth, currentYear).getDate()
             const isLastSaturdayOfMonth = date.getDate() === getLastSaturdayOfMonth(currentMonth, currentYear).getDate()
 
-            // Determine weekend styling
-            let weekendBg = undefined
+            // Range selection checks
+            const inRange = isInRange(date)
+            const rangeStart = isRangeStart(date)
+            const rangeEnd = isRangeEnd(date)
+
+            // Determine styling priority: Range > Weekend > Default
+            let boxBg = undefined
+            let boxRangeBg = undefined
             let borderTopRadius = undefined
             let borderBottomRadius = undefined
+            let borderLeftRadius = undefined
+            let borderRightRadius = undefined
+
+            let buttonVariant: "solid" | "ghost" | "outline" | "subtle" | "surface" | "plain" = selected ? "solid" : "ghost"
+            let buttonColorPalette = selected ? colorPallet : undefined
+            let buttonBg = undefined
+
+
 
             if (weekend) {
-                weekendBg = "gray.100"
+                // Weekend styling (only if not in range)
+                boxBg = "gray.100"
                 if ((isSunday(date) && isFirstSundayOfMonth) || (isSaturday(date) && isFirstSaturdayOfMonth)) {
                     borderTopRadius = "full"
                 }
@@ -230,6 +278,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     borderBottomRadius = "full"
                 }
             }
+
+            if (inRange)
+                boxRangeBg = `${colorPallet}.100/40`
+
+            if (rangeStart || rangeEnd)
+                buttonBg = `${colorPallet}.500`
+
+            if (rangeStart)
+                borderLeftRadius = "full"
+
+            if (rangeEnd)
+                borderRightRadius = "full"
 
             const size = "12"
 
@@ -240,25 +300,37 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     h={size}
                     borderTopRadius={borderTopRadius}
                     borderBottomRadius={borderBottomRadius}
-                    bg={weekendBg}
+                    bg={boxBg}
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <Button
-                        size="sm"
-                        variant={selected ? "solid" : "ghost"}
-                        colorPalette={selected ? "blue" : undefined}
-                        _hover={!disabled ? { bg: selected ? "blue.600" : "gray.200" } : {}}
-                        disabled={disabled}
-                        onClick={() => handleDateSelect(day)}
-                        fontSize="sm"
-                        rounded="full"
-                        w={size}
-                        h={size}
+                    <Box
+                        bg={boxRangeBg}
+                        borderLeftRadius={borderLeftRadius}
+                        borderRightRadius={borderRightRadius}
                     >
-                        {day}
-                    </Button>
+                        <Button
+                            size="sm"
+                            variant={buttonVariant}
+                            colorPalette={buttonColorPalette}
+                            bg={buttonBg}
+                            _hover={!disabled ? {
+                                bg: rangeStart || rangeEnd ? `${colorPallet}.600` :
+                                    inRange ? `${colorPallet}.200` :
+                                        selected ? `${colorPallet}.600` : "gray.200"
+                            } : {}}
+                            disabled={disabled}
+                            onClick={() => handleDateSelect(day)}
+                            fontSize="sm"
+                            rounded="full"
+                            w={size}
+                            h={size}
+                            color={rangeStart || rangeEnd || selected ? "white" : undefined}
+                        >
+                            {day}
+                        </Button>
+                    </Box>
                 </Box>
             )
         }

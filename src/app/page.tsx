@@ -96,7 +96,8 @@ export default function Home() {
                     <DatePicker
                       value={checkInDate}
                       onChange={setCheckInDate}
-                      minDate={new Date()}
+                      minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
+                      colorPallet="pink"
                     />
                   </Box>
                   <Box flex="1">
@@ -105,6 +106,9 @@ export default function Home() {
                       value={checkOutDate}
                       onChange={setCheckOutDate}
                       minDate={checkInDate || new Date()}
+                      rangeStart={checkInDate}
+                      rangeEnd={checkOutDate}
+                      colorPallet="pink"
                     />
                   </Box>
                 </HStack>
