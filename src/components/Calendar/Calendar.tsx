@@ -14,11 +14,12 @@ import {
     Text,
     VStack
 } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface CalendarProps {
     value?: Date
+    defaultValue?: Date // New prop for prefilled value
     onChange?: (date: Date) => void
     placeholder?: string
     disabled?: boolean
@@ -40,6 +41,7 @@ interface CalendarProps {
 
 export const Calendar: React.FC<CalendarProps> = ({
     value,
+    defaultValue,
     onChange,
     placeholder,
     disabled = false,
@@ -55,9 +57,20 @@ export const Calendar: React.FC<CalendarProps> = ({
 }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
-    const [currentMonth, setCurrentMonth] = useState(value ? value.getMonth() : new Date().getMonth())
-    const [currentYear, setCurrentYear] = useState(value ? value.getFullYear() : new Date().getFullYear())
+
+    // Use value if provided (controlled), otherwise use defaultValue or current date
+    const initialDate = value || defaultValue || new Date()
+    const [currentMonth, setCurrentMonth] = useState(initialDate.getMonth())
+    const [currentYear, setCurrentYear] = useState(initialDate.getFullYear())
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Sync calendar view when value changes (for controlled components)
+    useEffect(() => {
+        if (value) {
+            setCurrentMonth(value.getMonth())
+            setCurrentYear(value.getFullYear())
+        }
+    }, [value])
 
     const MONTHS = [
         t('calendar.months.january'),
@@ -110,11 +123,12 @@ export const Calendar: React.FC<CalendarProps> = ({
     }
 
     const isDateSelected = (date: Date): boolean => {
-        if (!value) return false
+        const selectedDate = value || defaultValue
+        if (!selectedDate) return false
         return (
-            date.getDate() === value.getDate() &&
-            date.getMonth() === value.getMonth() &&
-            date.getFullYear() === value.getFullYear()
+            date.getDate() === selectedDate.getDate() &&
+            date.getMonth() === selectedDate.getMonth() &&
+            date.getFullYear() === selectedDate.getFullYear()
         )
     }
 
@@ -407,7 +421,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                     <Box position="relative" display="inline-block">
                         <Input
                             ref={inputRef}
-                            value={value ? formatDate(value) : ''}
+                            value={(value || defaultValue) ? formatDate(value || defaultValue!) : ''}
                             placeholder={placeholder || t('calendar.placeholder')}
                             readOnly
                             disabled={disabled}

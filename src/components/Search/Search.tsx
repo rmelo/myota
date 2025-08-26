@@ -87,7 +87,14 @@ export default function Search({ color }: SearchProps) {
     const { containerRef, layout } = useContainerBreakpoint();
 
     // Date state management
-    const [departureDate, setDepartureDate] = useState<Date | undefined>();
+    const getTomorrowDate = () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        return tomorrow;
+    };
+
+    const [departureDate, setDepartureDate] = useState<Date | undefined>(getTomorrowDate());
     const [returnDate, setReturnDate] = useState<Date | undefined>();
 
     // Date field component using Calendar
