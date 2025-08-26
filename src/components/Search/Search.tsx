@@ -115,6 +115,7 @@ export default function Search({ color }: SearchProps) {
                     minDate={minDate}
                     rangeStart={rangeStart}
                     rangeEnd={rangeEnd}
+                    showToday={false}
                 >
                     <FlatInput
                         value={value ? value.toLocaleDateString() : ''}

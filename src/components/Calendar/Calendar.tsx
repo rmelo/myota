@@ -6,15 +6,13 @@ import {
     Box,
     Button,
     Center,
-    Circle,
-    Float,
     Grid,
     HStack,
     IconButton,
     Input,
     Popover,
     Text,
-    VStack,
+    VStack
 } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -288,23 +286,26 @@ export const Calendar: React.FC<CalendarProps> = ({
             const rangeStart = isRangeStart(date)
             const rangeEnd = isRangeEnd(date)
 
-            // Determine styling priority: Range > Weekend > Default
+            // Color system refactored according to specifications
+            const mainColor = `${colorPallet}.500`
+            const rangeColor = `${colorPallet}.200/50`
+            const weekendColor = "gray.200"
+
+            // Initialize styling variables
             let boxBg = undefined
             let boxRangeBg = undefined
             let borderTopRadius = undefined
             let borderBottomRadius = undefined
             let borderLeftRadius = undefined
             let borderRightRadius = undefined
-
-            let buttonVariant: "solid" | "ghost" | "outline" | "subtle" | "surface" | "plain" = selected ? "solid" : "ghost"
-            let buttonColorPalette = selected ? colorPallet : undefined
+            let buttonVariant: "solid" | "ghost" | "outline" | "subtle" | "surface" | "plain" = "ghost"
+            let buttonColorPalette = undefined
             let buttonBg = undefined
+            let buttonColor = undefined
 
-
-
+            // Apply weekend styling
             if (weekend) {
-                // Weekend styling (only if not in range)
-                boxBg = "gray.100"
+                boxBg = weekendColor
                 if ((isSunday(date) && isFirstSundayOfMonth) || (isSaturday(date) && isFirstSaturdayOfMonth)) {
                     borderTopRadius = "full"
                 }
@@ -313,17 +314,27 @@ export const Calendar: React.FC<CalendarProps> = ({
                 }
             }
 
-            if (inRange)
-                boxRangeBg = `${colorPallet}.200/50`
+            // Apply range styling
+            if (inRange) {
+                boxRangeBg = rangeColor
+            }
 
-            if (rangeStart || rangeEnd)
-                buttonBg = `${colorPallet}.500`
+            // Apply selected date styling (main color)
+            if (selected) {
+                buttonVariant = "solid"
+                buttonColorPalette = colorPallet
+                buttonColor = "white"
+            }
 
-            if (rangeStart)
-                borderLeftRadius = "full"
-
-            if (rangeEnd)
-                borderRightRadius = "full"
+            // Apply range start/end styling (main color) - override selected styling for consistency
+            if (rangeStart || rangeEnd) {
+                buttonVariant = "solid"
+                buttonColorPalette = colorPallet
+                buttonBg = undefined // Let colorPalette handle the color
+                buttonColor = "white"
+                if (rangeStart) borderLeftRadius = "full"
+                if (rangeEnd) borderRightRadius = "full"
+            }
 
             days.push(
                 <Box key={day}
@@ -347,10 +358,11 @@ export const Calendar: React.FC<CalendarProps> = ({
                             variant={buttonVariant}
                             colorPalette={buttonColorPalette}
                             bg={buttonBg}
+                            color={buttonColor}
                             _hover={!disabled ? {
-                                bg: rangeStart || rangeEnd ? `${colorPallet}.500` :
-                                    inRange ? `${colorPallet}.200` :
-                                        selected ? `${colorPallet}.500` : "gray.200"
+                                bg: (rangeStart || rangeEnd || selected) ? `${colorPallet}.600` :
+                                    inRange ? `${colorPallet}.300` :
+                                        weekend ? `gray.300` : `gray.100`
                             } : {}}
                             disabled={disabled}
                             onClick={() => handleDateSelect(day)}
@@ -358,15 +370,19 @@ export const Calendar: React.FC<CalendarProps> = ({
                             rounded="full"
                             w={boxSize}
                             h={boxSize}
-                        // color={rangeStart || rangeEnd || selected ? "white" : undefined}
+                            position="relative"
                         >
                             {day}
-                            {today &&
-                                <Float placement="bottom-center" offset={[0, 1]}>
-                                    <Circle size="2" bg={`${colorPallet}.500`}>
-                                    </Circle>
-                                </Float>
-                            }
+                            {today && !selected && !rangeStart && !rangeEnd && (
+                                <Box
+                                    position="absolute"
+                                    bottom="0"
+                                    w="1.5"
+                                    h="1.5"
+                                    bg={`gray.300`}
+                                    rounded="full"
+                                />
+                            )}
                         </Button>
                     </Box>
                 </Box>
@@ -403,9 +419,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                 )}
             </Popover.Trigger>
             <Popover.Positioner>
-                <Popover.Content w="fit-content" minW="280px" p="4" rounded="2xl">
+                <Popover.Content w="fit-content" minW="280px" p="0" rounded="2xl">
                     <Popover.Body>
-                        <VStack gap="4">
+                        <VStack gap="2">
                             {/* Month/Year Navigation */}
                             <HStack justify="space-between" w="full">
                                 {(showPrevBeforeMinDate || canNavigateToPreviousMonth()) && (
@@ -462,7 +478,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                                         // Only navigate to today's month/year, don't select the date
                                     }}
                                     w="full"
-                                    rounded="full"
+                                    rounded="xl"
                                 >
                                     {t('calendar.today')}
                                 </Button>
