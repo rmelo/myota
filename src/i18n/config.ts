@@ -21,11 +21,18 @@ import { languageES } from './general/language/es'
 import { languageFR } from './general/language/fr'
 import { languagePT } from './general/language/pt'
 
+import { searchEN } from './components/search/en'
+import { searchES } from './components/search/es'
+import { searchFR } from './components/search/fr'
+import { searchDE } from './components/search/de'
+import { searchPT } from './components/search/pt'
+
 // Organized translation resources
 const resources = {
     en: {
         translation: {
             calendar: calendarEN,
+            search: searchEN,
             demo: demoEN,
             language: languageEN
         }
@@ -33,6 +40,7 @@ const resources = {
     es: {
         translation: {
             calendar: calendarES,
+            search: searchES,
             demo: demoES,
             language: languageES
         }
@@ -40,6 +48,7 @@ const resources = {
     fr: {
         translation: {
             calendar: calendarFR,
+            search: searchFR,
             demo: demoFR,
             language: languageFR
         }
@@ -47,6 +56,7 @@ const resources = {
     de: {
         translation: {
             calendar: calendarDE,
+            search: searchDE,
             demo: demoDE,
             language: languageDE
         }
@@ -54,6 +64,7 @@ const resources = {
     pt: {
         translation: {
             calendar: calendarPT,
+            search: searchPT,
             demo: demoPT,
             language: languagePT
         }

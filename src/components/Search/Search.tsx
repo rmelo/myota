@@ -13,6 +13,7 @@ import {
     Text
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
 
 type SearchBarProps = {
@@ -55,6 +56,7 @@ function useContainerBreakpoint() {
 }
 
 export default function Search({ color }: SearchBarProps) {
+    const { t } = useTranslation();
     const { containerRef, layout } = useContainerBreakpoint();
 
     return (
@@ -74,13 +76,13 @@ export default function Search({ color }: SearchBarProps) {
                     <GroupCard gridArea="odCard">
                         <Grid templateColumns="1fr" position="relative" rowGap={2}>
                             <Cell>
-                                <Field label="Origin">
-                                    <FlatInput placeholder="Leaving from..." />
+                                <Field label={t('search.labels.origin')}>
+                                    <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
                                 </Field>
                             </Cell>
                             <Cell>
-                                <Field label="Destination">
-                                    <FlatInput placeholder="Going to..." />
+                                <Field label={t('search.labels.destination')}>
+                                    <FlatInput placeholder={t('search.placeholders.goingTo')} />
                                 </Field>
                             </Cell>
                             <SwapBtnAbsolute />
@@ -91,13 +93,13 @@ export default function Search({ color }: SearchBarProps) {
                     <GroupCard gridArea="datesCard">
                         <Grid templateColumns="1fr 1fr">
                             <Cell>
-                                <Field label="Date">
-                                    <FlatInput placeholder="Wed, Aug 27" />
+                                <Field label={t('search.labels.date')}>
+                                    <FlatInput placeholder={t('search.placeholders.dateExample')} />
                                 </Field>
                             </Cell>
                             <Cell>
-                                <Field label="Return Date">
-                                    <FlatInput placeholder="Optional" />
+                                <Field label={t('search.labels.returnDate')}>
+                                    <FlatInput placeholder={t('search.placeholders.optional')} />
                                 </Field>
                             </Cell>
                         </Grid>
@@ -106,8 +108,8 @@ export default function Search({ color }: SearchBarProps) {
                     {/* Passengers card — plain input, no steppers */}
                     <GroupCard gridArea="paxCard">
                         <Cell>
-                            <Field label="Passengers">
-                                <FlatInput type="number" min={1} placeholder="1" />
+                            <Field label={t('search.labels.passengers')}>
+                                <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
                             </Field>
                         </Cell>
                     </GroupCard>
@@ -121,7 +123,7 @@ export default function Search({ color }: SearchBarProps) {
                             variant="solid"
                             colorPalette={color}
                         >
-                            <CgSearch />Search
+                            <CgSearch />{t('search.buttons.search')}
                         </Button>
                     </GridItem>
                 </Grid>
@@ -138,8 +140,8 @@ export default function Search({ color }: SearchBarProps) {
                             columnGap={2}                    // extra breathing room
                         >
                             <Cell pr={2}>
-                                <Field label="Origin">
-                                    <FlatInput placeholder="Leaving from..." />
+                                <Field label={t('search.labels.origin')}>
+                                    <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
                                 </Field>
                             </Cell>
 
@@ -154,8 +156,8 @@ export default function Search({ color }: SearchBarProps) {
                             </GridItem>
 
                             <Cell pl={2}>
-                                <Field label="Destination">
-                                    <FlatInput placeholder="Going to..." />
+                                <Field label={t('search.labels.destination')}>
+                                    <FlatInput placeholder={t('search.placeholders.goingTo')} />
                                 </Field>
                             </Cell>
                         </Grid>
@@ -165,21 +167,21 @@ export default function Search({ color }: SearchBarProps) {
                     <RowGroup>
                         <Grid templateColumns="1fr 1fr 1fr auto" alignItems="stretch">
                             <Cell>
-                                <Field label="Date">
-                                    <FlatInput placeholder="Wed, Aug 27" />
+                                <Field label={t('search.labels.date')}>
+                                    <FlatInput placeholder={t('search.placeholders.dateExample')} />
                                 </Field>
                             </Cell>
 
                             <Cell>
-                                <Field label="Return Date">
-                                    <FlatInput placeholder="Optional" />
+                                <Field label={t('search.labels.returnDate')}>
+                                    <FlatInput placeholder={t('search.placeholders.optional')} />
                                 </Field>
                             </Cell>
 
                             {/* Passengers — plain input */}
                             <Cell>
-                                <Field label="Passengers">
-                                    <FlatInput type="number" min={1} placeholder="1" />
+                                <Field label={t('search.labels.passengers')}>
+                                    <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
                                 </Field>
                             </Cell>
 
@@ -198,7 +200,7 @@ export default function Search({ color }: SearchBarProps) {
                                     colorPalette={color}
                                     display="block"
                                 >
-                                    <CgSearch />Search
+                                    <CgSearch />{t('search.buttons.search')}
                                 </Button>
                             </GridItem>
                         </Grid>
@@ -222,8 +224,8 @@ export default function Search({ color }: SearchBarProps) {
                         alignItems="stretch"
                     >
                         <Cell>
-                            <Field label="Origin">
-                                <FlatInput placeholder="Leaving from..." />
+                            <Field label={t('search.labels.origin')}>
+                                <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
                             </Field>
                         </Cell>
 
@@ -239,23 +241,23 @@ export default function Search({ color }: SearchBarProps) {
                         </GridItem>
 
                         <Cell>
-                            <Field label="Destination">
-                                <FlatInput placeholder="Going to..." />
+                            <Field label={t('search.labels.destination')}>
+                                <FlatInput placeholder={t('search.placeholders.goingTo')} />
                             </Field>
                         </Cell>
                         <Cell>
-                            <Field label="Date">
-                                <FlatInput placeholder="Wed, Aug 27" />
+                            <Field label={t('search.labels.date')}>
+                                <FlatInput placeholder={t('search.placeholders.dateExample')} />
                             </Field>
                         </Cell>
                         <Cell >
-                            <Field label="Return Date">
-                                <FlatInput placeholder="Optional" />
+                            <Field label={t('search.labels.returnDate')}>
+                                <FlatInput placeholder={t('search.placeholders.optional')} />
                             </Field>
                         </Cell>
                         <Cell >
-                            <Field label="Passengers">
-                                <FlatInput type="number" min={1} placeholder="1" />
+                            <Field label={t('search.labels.passengers')}>
+                                <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
                             </Field>
                         </Cell>
                         <GridItem p={0} alignSelf="stretch">
@@ -268,7 +270,7 @@ export default function Search({ color }: SearchBarProps) {
                                 display="block"
                             >
                                 <Flex gap={2}>
-                                    <CgSearch />Search
+                                    <CgSearch />{t('search.buttons.search')}
                                 </Flex>
                             </Button>
                         </GridItem>
@@ -355,9 +357,11 @@ function FlatInput(props: React.ComponentProps<typeof Input>) {
 
 /** Small-screen absolute swap (kept from your earlier UX) */
 function SwapBtnAbsolute() {
+    const { t } = useTranslation();
+
     return (
         <IconButton
-            aria-label="Swap origin and destination"
+            aria-label={t('search.buttons.swapOriginDestination')}
             size="xs"
             position="absolute"
             top="50%"
@@ -375,9 +379,11 @@ function SwapBtnAbsolute() {
 
 /** Block swap (lives in its own grid column on md row 1) */
 function SwapBtnBlock() {
+    const { t } = useTranslation();
+
     return (
         <IconButton
-            aria-label="Swap origin and destination"
+            aria-label={t('search.buttons.swapOriginDestination')}
             rounded="full"
             bg="white"
             boxShadow="sm"
