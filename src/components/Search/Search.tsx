@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
 
-type SearchBarProps = {
+type SearchProps = {
     color?: string;
 }
 
@@ -55,9 +55,78 @@ function useContainerBreakpoint() {
     return { containerRef, layout };
 }
 
-export default function Search({ color }: SearchBarProps) {
+// Field configuration for reusability
+const searchFields = {
+    origin: {
+        labelKey: 'search.labels.origin',
+        placeholderKey: 'search.placeholders.leavingFrom'
+    },
+    destination: {
+        labelKey: 'search.labels.destination',
+        placeholderKey: 'search.placeholders.goingTo'
+    },
+    date: {
+        labelKey: 'search.labels.date',
+        placeholderKey: 'search.placeholders.dateExample'
+    },
+    returnDate: {
+        labelKey: 'search.labels.returnDate',
+        placeholderKey: 'search.placeholders.optional'
+    },
+    passengers: {
+        labelKey: 'search.labels.passengers',
+        placeholderKey: 'search.placeholders.passengersCount',
+        type: 'number' as const,
+        min: 1
+    }
+} as const;
+
+export default function Search({ color }: SearchProps) {
     const { t } = useTranslation();
     const { containerRef, layout } = useContainerBreakpoint();
+
+    // Reusable search field component
+    const SearchField = ({ field, ...inputProps }: { field: keyof typeof searchFields } & React.ComponentProps<typeof FlatInput>) => {
+        const fieldConfig = searchFields[field];
+        return (
+            <Field label={t(fieldConfig.labelKey)}>
+                <FlatInput
+                    placeholder={t(fieldConfig.placeholderKey)}
+                    type={'type' in fieldConfig ? fieldConfig.type : undefined}
+                    min={'min' in fieldConfig ? fieldConfig.min : undefined}
+                    {...inputProps}
+                />
+            </Field>
+        );
+    };
+
+    // Reusable search button component
+    const SearchButton = ({ isFullHeight = false, rounded = "xl" }: { isFullHeight?: boolean; rounded?: string }) => (
+        <Button
+            w="100%"
+            h={isFullHeight ? "100%" : 12}
+            rounded={rounded}
+            variant="solid"
+            colorPalette={color}
+        >
+            <Flex gap={2} alignItems="center" border="1px solid red">
+                <CgSearch />{t('search.buttons.search')}
+            </Flex>
+        </Button>
+    );
+
+    // Swap button container component
+    const SwapButtonContainer = ({ layout: buttonLayout }: { layout: 'absolute' | 'block' }) => (
+        <GridItem
+            p={0}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            {...(buttonLayout === 'absolute' ? {} : { px: 2 })}
+        >
+            {buttonLayout === 'absolute' ? <SwapBtnAbsolute /> : <SwapBtnBlock />}
+        </GridItem>
+    );
 
     return (
         <Box ref={containerRef}>
@@ -66,65 +135,33 @@ export default function Search({ color }: SearchBarProps) {
                 <Grid
                     gap={3}
                     templateAreas={`
-              "odCard"
-              "datesCard"
-              "paxCard"
-              "button"
-            `}
+                        "odCard"
+                        "datesCard"
+                        "paxCard"
+                        "button"
+                    `}
                 >
-                    {/* Origin/Destination card (swap aligned right) */}
                     <GroupCard gridArea="odCard">
                         <Grid templateColumns="1fr" position="relative" rowGap={2}>
-                            <Cell>
-                                <Field label={t('search.labels.origin')}>
-                                    <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
-                                </Field>
-                            </Cell>
-                            <Cell>
-                                <Field label={t('search.labels.destination')}>
-                                    <FlatInput placeholder={t('search.placeholders.goingTo')} />
-                                </Field>
-                            </Cell>
+                            <Cell><SearchField field="origin" /></Cell>
+                            <Cell><SearchField field="destination" /></Cell>
                             <SwapBtnAbsolute />
                         </Grid>
                     </GroupCard>
 
-                    {/* Dates card */}
                     <GroupCard gridArea="datesCard">
                         <Grid templateColumns="1fr 1fr">
-                            <Cell>
-                                <Field label={t('search.labels.date')}>
-                                    <FlatInput placeholder={t('search.placeholders.dateExample')} />
-                                </Field>
-                            </Cell>
-                            <Cell>
-                                <Field label={t('search.labels.returnDate')}>
-                                    <FlatInput placeholder={t('search.placeholders.optional')} />
-                                </Field>
-                            </Cell>
+                            <Cell><SearchField field="date" /></Cell>
+                            <Cell><SearchField field="returnDate" /></Cell>
                         </Grid>
                     </GroupCard>
 
-                    {/* Passengers card — plain input, no steppers */}
                     <GroupCard gridArea="paxCard">
-                        <Cell>
-                            <Field label={t('search.labels.passengers')}>
-                                <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
-                            </Field>
-                        </Cell>
+                        <Cell><SearchField field="passengers" /></Cell>
                     </GroupCard>
 
-                    {/* Search card */}
                     <GridItem gridArea="button">
-                        <Button
-                            w="100%"
-                            h={12}
-                            rounded="xl"
-                            variant="solid"
-                            colorPalette={color}
-                        >
-                            <CgSearch />{t('search.buttons.search')}
-                        </Button>
+                        <SearchButton />
                     </GridItem>
                 </Grid>
             )}
@@ -132,76 +169,26 @@ export default function Search({ color }: SearchBarProps) {
             {/* ======== MEDIUM: 2 ROUNDED ROWS WITH GAP ======== */}
             {layout === 'md' && (
                 <Box display="grid" rowGap={3}>
-                    {/* Row 1: Origin | (Swap) | Destination  — more space + safe text */}
                     <RowGroup>
-                        <Grid
-                            templateColumns="1fr 40px 1fr"  // center column reserved for swap
-                            alignItems="stretch"
-                            columnGap={2}                    // extra breathing room
-                        >
-                            <Cell pr={2}>
-                                <Field label={t('search.labels.origin')}>
-                                    <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
-                                </Field>
-                            </Cell>
-
-                            {/* Swap lives in its own column (no overlap with text) */}
-                            <GridItem
-                                p={0}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                            >
-                                <SwapBtnBlock />
-                            </GridItem>
-
-                            <Cell pl={2}>
-                                <Field label={t('search.labels.destination')}>
-                                    <FlatInput placeholder={t('search.placeholders.goingTo')} />
-                                </Field>
-                            </Cell>
+                        <Grid templateColumns="1fr 40px 1fr" alignItems="stretch" columnGap={2}>
+                            <Cell pr={2}><SearchField field="origin" /></Cell>
+                            <SwapButtonContainer layout="block" />
+                            <Cell pl={2}><SearchField field="destination" /></Cell>
                         </Grid>
                     </RowGroup>
 
-                    {/* Row 2: Date | Return | Pax | Search */}
                     <RowGroup>
                         <Grid templateColumns="1fr 1fr 1fr auto" alignItems="stretch">
-                            <Cell>
-                                <Field label={t('search.labels.date')}>
-                                    <FlatInput placeholder={t('search.placeholders.dateExample')} />
-                                </Field>
-                            </Cell>
-
-                            <Cell>
-                                <Field label={t('search.labels.returnDate')}>
-                                    <FlatInput placeholder={t('search.placeholders.optional')} />
-                                </Field>
-                            </Cell>
-
-                            {/* Passengers — plain input */}
-                            <Cell>
-                                <Field label={t('search.labels.passengers')}>
-                                    <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
-                                </Field>
-                            </Cell>
-
-                            {/* Button cell fills the whole row height */}
+                            <Cell><SearchField field="date" /></Cell>
+                            <Cell><SearchField field="returnDate" /></Cell>
+                            <Cell><SearchField field="passengers" /></Cell>
                             <GridItem
                                 p={0}
                                 alignSelf="stretch"
                                 borderLeftWidth="1px"
                                 borderColor="blackAlpha.200"
                             >
-                                <Button
-                                    w="100%"
-                                    h="100%"
-                                    rounded="none"
-                                    variant="solid"
-                                    colorPalette={color}
-                                    display="block"
-                                >
-                                    <CgSearch />{t('search.buttons.search')}
-                                </Button>
+                                <SearchButton isFullHeight rounded="none" />
                             </GridItem>
                         </Grid>
                     </RowGroup>
@@ -223,56 +210,14 @@ export default function Search({ color }: SearchBarProps) {
                         templateColumns="1fr auto 1fr 1fr 1fr 1fr auto"
                         alignItems="stretch"
                     >
-                        <Cell>
-                            <Field label={t('search.labels.origin')}>
-                                <FlatInput placeholder={t('search.placeholders.leavingFrom')} />
-                            </Field>
-                        </Cell>
-
-                        {/* Swap Button Column */}
-                        <GridItem
-                            p={0}
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            px={2}
-                        >
-                            <SwapBtnBlock />
-                        </GridItem>
-
-                        <Cell>
-                            <Field label={t('search.labels.destination')}>
-                                <FlatInput placeholder={t('search.placeholders.goingTo')} />
-                            </Field>
-                        </Cell>
-                        <Cell>
-                            <Field label={t('search.labels.date')}>
-                                <FlatInput placeholder={t('search.placeholders.dateExample')} />
-                            </Field>
-                        </Cell>
-                        <Cell >
-                            <Field label={t('search.labels.returnDate')}>
-                                <FlatInput placeholder={t('search.placeholders.optional')} />
-                            </Field>
-                        </Cell>
-                        <Cell >
-                            <Field label={t('search.labels.passengers')}>
-                                <FlatInput type="number" min={1} placeholder={t('search.placeholders.passengersCount')} />
-                            </Field>
-                        </Cell>
+                        <Cell><SearchField field="origin" /></Cell>
+                        <SwapButtonContainer layout="block" />
+                        <Cell><SearchField field="destination" /></Cell>
+                        <Cell><SearchField field="date" /></Cell>
+                        <Cell><SearchField field="returnDate" /></Cell>
+                        <Cell><SearchField field="passengers" /></Cell>
                         <GridItem p={0} alignSelf="stretch">
-                            <Button
-                                w="100%"
-                                h="100%"
-                                rounded="none"
-                                variant="solid"
-                                colorPalette={color}
-                                display="block"
-                            >
-                                <Flex gap={2}>
-                                    <CgSearch />{t('search.buttons.search')}
-                                </Flex>
-                            </Button>
+                            <SearchButton isFullHeight rounded="none" />
                         </GridItem>
                     </Grid>
                 </Box>
@@ -355,41 +300,49 @@ function FlatInput(props: React.ComponentProps<typeof Input>) {
     );
 }
 
-/** Small-screen absolute swap (kept from your earlier UX) */
-function SwapBtnAbsolute() {
+/** Base swap button component */
+function SwapButton({
+    variant = 'block',
+    ...props
+}: {
+    variant?: 'absolute' | 'block'
+} & React.ComponentProps<typeof IconButton>) {
     const { t } = useTranslation();
 
+    const baseProps = {
+        'aria-label': t('search.buttons.swapOriginDestination'),
+        rounded: 'full' as const,
+        bg: 'white',
+        boxShadow: 'sm',
+        color: 'gray.500',
+        ...props
+    };
+
+    if (variant === 'absolute') {
+        return (
+            <IconButton
+                {...baseProps}
+                size="xs"
+                position="absolute"
+                top="50%"
+                right={3}
+                transform="translateY(-50%)"
+            >
+                <CgArrowsExchangeV />
+            </IconButton>
+        );
+    }
+
     return (
-        <IconButton
-            aria-label={t('search.buttons.swapOriginDestination')}
-            size="xs"
-            position="absolute"
-            top="50%"
-            right={3}
-            transform="translateY(-50%)"
-            rounded="full"
-            bg="white"
-            boxShadow="sm"
-            color="gray.500"
-        >
-            <CgArrowsExchangeV />
+        <IconButton {...baseProps}>
+            <CgArrowsExchange />
         </IconButton>
     );
 }
 
-/** Block swap (lives in its own grid column on md row 1) */
-function SwapBtnBlock() {
-    const { t } = useTranslation();
+/** Small-screen absolute swap */
+const SwapBtnAbsolute = () => <SwapButton variant="absolute" />;
 
-    return (
-        <IconButton
-            aria-label={t('search.buttons.swapOriginDestination')}
-            rounded="full"
-            bg="white"
-            boxShadow="sm"
-            color="gray.500"
-        >
-            <CgArrowsExchange />
-        </IconButton >
-    );
-}
+/** Block swap for medium/large layouts */
+const SwapBtnBlock = () => <SwapButton variant="block" />;
+
