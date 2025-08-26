@@ -88,10 +88,13 @@ i18n
             caches: ['localStorage'],
         },
 
-        // Prevent hydration mismatch
+        // Prevent hydration mismatch and improve SSR compatibility
         react: {
             useSuspense: false,
         },
+        
+        // Improve hydration by ensuring consistent language detection
+        initImmediate: false,
     })
 
 export default i18n
