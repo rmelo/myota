@@ -6,6 +6,8 @@ import {
     Box,
     Button,
     Center,
+    Circle,
+    Float,
     Grid,
     HStack,
     IconButton,
@@ -260,7 +262,7 @@ export const Calendar: React.FC<CalendarProps> = ({
         const days: React.ReactNode[] = []
 
         // Empty cells for days before the first day of the month
-        const boxSize = "12"
+        const boxSize = "10"
         for (let i = 0; i < firstDay; i++) {
             days.push(
                 <Box key={`empty-${i}`}>
@@ -346,9 +348,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                             colorPalette={buttonColorPalette}
                             bg={buttonBg}
                             _hover={!disabled ? {
-                                bg: rangeStart || rangeEnd ? `${colorPallet}.600` :
+                                bg: rangeStart || rangeEnd ? `${colorPallet}.500` :
                                     inRange ? `${colorPallet}.200` :
-                                        selected ? `${colorPallet}.600` : "gray.200"
+                                        selected ? `${colorPallet}.500` : "gray.200"
                             } : {}}
                             disabled={disabled}
                             onClick={() => handleDateSelect(day)}
@@ -356,10 +358,15 @@ export const Calendar: React.FC<CalendarProps> = ({
                             rounded="full"
                             w={boxSize}
                             h={boxSize}
-                            color={rangeStart || rangeEnd || selected ? "white" : undefined}
-                            fontWeight={today && !selected ? "bold" : undefined}
+                        // color={rangeStart || rangeEnd || selected ? "white" : undefined}
                         >
                             {day}
+                            {today &&
+                                <Float placement="bottom-center" offset={[0, 1]}>
+                                    <Circle size="2" bg={`${colorPallet}.500`}>
+                                    </Circle>
+                                </Float>
+                            }
                         </Button>
                     </Box>
                 </Box>
@@ -396,7 +403,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 )}
             </Popover.Trigger>
             <Popover.Positioner>
-                <Popover.Content w="fit-content" minW="280px" p="4" rounded="4xl">
+                <Popover.Content w="fit-content" minW="280px" p="4" rounded="2xl">
                     <Popover.Body>
                         <VStack gap="4">
                             {/* Month/Year Navigation */}

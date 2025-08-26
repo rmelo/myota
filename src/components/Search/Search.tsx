@@ -95,7 +95,11 @@ export default function Search({ color }: SearchProps) {
         const fieldConfig = searchFields[field];
         const value = field === 'date' ? departureDate : returnDate;
         const onChange = field === 'date' ? setDepartureDate : setReturnDate;
-        const minDate = field === 'returnDate' ? departureDate : undefined;
+
+        // Set minimum dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to start of day
+        const minDate = field === 'date' ? today : (departureDate || today);
 
         // For return date calendar, show range selection with departure date as range start
         const rangeStart = field === 'returnDate' ? departureDate : undefined;
