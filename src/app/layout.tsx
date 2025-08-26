@@ -1,6 +1,8 @@
 "use client"
 
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import customSystem from "@/theme";
+import { ChakraProvider } from "@chakra-ui/react";
+import "../i18n/config";
 
 export default function RootLayout({
   children,
@@ -10,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <ChakraProvider value={defaultSystem}>
+        <ChakraProvider value={customSystem}>
           {children}
         </ChakraProvider>
       </body>
