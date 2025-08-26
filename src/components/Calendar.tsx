@@ -303,7 +303,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             // Color system refactored according to specifications
             const mainColor = `${colorPallet}.500`
             const rangeColor = `${colorPallet}.200/50`
-            const weekendColor = "gray.200"
+            const weekendColor = "gray.100"
 
             // Initialize styling variables
             let boxBg = undefined

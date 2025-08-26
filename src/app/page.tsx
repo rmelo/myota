@@ -43,7 +43,7 @@ export default function Page() {
           animation: "fade-in 500ms ease-out",
         }}>
         <Header />
-        <Search color="red" />
+        <Search color="black" />
       </Box>
     </Container>
   )
