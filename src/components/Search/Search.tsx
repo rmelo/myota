@@ -15,6 +15,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
+import { Calendar } from "../Calendar/Calendar";
 
 type SearchProps = {
     color?: string;
@@ -85,9 +86,46 @@ export default function Search({ color }: SearchProps) {
     const { t } = useTranslation();
     const { containerRef, layout } = useContainerBreakpoint();
 
+    // Date state management
+    const [departureDate, setDepartureDate] = useState<Date | undefined>();
+    const [returnDate, setReturnDate] = useState<Date | undefined>();
+
+    // Date field component using Calendar
+    const DateField = ({ field }: { field: 'date' | 'returnDate' }) => {
+        const fieldConfig = searchFields[field];
+        const value = field === 'date' ? departureDate : returnDate;
+        const onChange = field === 'date' ? setDepartureDate : setReturnDate;
+        const minDate = field === 'returnDate' ? departureDate : undefined;
+
+        return (
+            <Field label={t(fieldConfig.labelKey)}>
+                <Calendar
+                    value={value}
+                    onChange={onChange}
+                    placeholder={t(fieldConfig.placeholderKey)}
+                    colorPallet={color}
+                    minDate={minDate}
+                >
+                    <FlatInput
+                        value={value ? value.toLocaleDateString() : ''}
+                        placeholder={t(fieldConfig.placeholderKey)}
+                        readOnly
+                        cursor="pointer"
+                    />
+                </Calendar>
+            </Field>
+        );
+    };
+
     // Reusable search field component
     const SearchField = ({ field, ...inputProps }: { field: keyof typeof searchFields } & React.ComponentProps<typeof FlatInput>) => {
         const fieldConfig = searchFields[field];
+
+        // Use DateField for date and returnDate fields
+        if (field === 'date' || field === 'returnDate') {
+            return <DateField field={field} />;
+        }
+
         return (
             <Field label={t(fieldConfig.labelKey)}>
                 <FlatInput
