@@ -15,7 +15,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
-import { Calendar } from "../Calendar/Calendar";
+import { Calendar } from "./Calendar";
 
 type SearchProps = {
     color?: string;

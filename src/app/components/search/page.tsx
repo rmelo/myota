@@ -1,6 +1,6 @@
 "use client";
 
-import Search from "@/components/Search/Search";
+import Search from "@/components/Search";
 import {
     Box,
     ColorPalette,
