@@ -1,9 +1,9 @@
 "use client"
 
-import { Box, Container, createListCollection, Heading, HStack, Portal, Select, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, createListCollection, Flex, Heading, HStack, Input, Portal, Select, Stack, Text, VStack } from "@chakra-ui/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ClientOnly } from "../components/ClientOnly";
 import { DatePicker } from "../components/DatePicker";
 
 export default function Home() {
@@ -46,10 +46,13 @@ export default function Home() {
   }
 
   return (
-    <Container maxW="4xl" py="8">
-      <VStack gap="8">
+    <Container border="1px solid" borderColor="red.200">
+      {/* Header */}
+      <Flex justify="space-between" align="center" py="8" border="1px solid" borderColor="blue.200">
+        <Box>
+          <Image src="https://www.plataforma10.com.ar/publicAssets/images/Plataforma-10-Logo.svg" alt="logo" width={160} height={160} />
+        </Box>
         <HStack justify="space-between" align="center">
-          <Heading size="xl">{t('demo.title')}</Heading>
           <Box>
             <HStack gap="2" align="center">
               <Text fontSize="sm" fontWeight="medium">{t('language.selector')}</Text>
@@ -85,57 +88,115 @@ export default function Home() {
             </HStack>
           </Box>
         </HStack>
-
-        <Box bg="gray.50" p="6" borderRadius="lg">
-          <VStack gap="6" >
-            <Box>
-              <ClientOnly>
-                <HStack gap="4" align="start">
-                  <Box flex="1">
-                    <Text mb="2" fontSize="sm" fontWeight="medium">{t('demo.checkInDate')}</Text>
-                    <DatePicker
-                      value={checkInDate}
-                      onChange={setCheckInDate}
-                      minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
-                      colorPallet="pink"
-                      showToday={false}
-                      showPrevBeforeMinDate={false}
-                    />
-                  </Box>
-                  <Box flex="1">
-                    <Text mb="2" fontSize="sm" fontWeight="medium">{t('demo.checkOutDate')}</Text>
-                    <DatePicker
-                      value={checkOutDate}
-                      onChange={setCheckOutDate}
-                      minDate={checkInDate || new Date()}
-                      rangeStart={checkInDate}
-                      rangeEnd={checkOutDate}
-                      colorPallet="pink"
-                      closeOnSelect={false}
-                      showToday={false}
-                      showPrevBeforeMinDate={false}
-                    />
-                  </Box>
-                </HStack>
-              </ClientOnly>
-              {checkInDate && checkOutDate && (
-                <Box mt="4" p="3" bg="blue.50" borderRadius="md">
-                  <Text fontSize="sm" fontWeight="medium">{t('demo.bookingSummary')}</Text>
-                  <Text fontSize="sm">
-                    {t('demo.checkIn')} {checkInDate.toLocaleDateString(i18n.language)}
-                  </Text>
-                  <Text fontSize="sm">
-                    {t('demo.checkOut')} {checkOutDate.toLocaleDateString(i18n.language)}
-                  </Text>
-                  <Text fontSize="sm">
-                    {t('demo.duration')} {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} {t('demo.nights')}
-                  </Text>
-                </Box>
-              )}
+      </Flex>
+      {/* Body */}
+      <Flex justify="space-between" align="center" borderRadius="lg" border="1px solid" borderColor="green.200">
+        <Stack gap="0" direction={[]}>
+          <Box>
+            <Box p="4">
+              <Stack gap="0">
+                <Text fontSize="sm" color="gray.600" fontWeight="medium">Origin</Text>
+                <Input
+                  placeholder="São Paulo, BR"
+                  fontSize="md"
+                  variant="flushed"
+                  borderBottomWidth={0}
+                />
+              </Stack>
             </Box>
-          </VStack>
+          </Box>
+          <Box>
+            <Box p="4" >
+              <Stack gap="0">
+                <Text fontSize="sm" color="gray.600" fontWeight="medium">Destination</Text>
+                <Input
+                  placeholder="Rio de Janeiro, BR"
+                  fontSize="md"
+                  variant="flushed"
+                  borderBottomWidth={0}
+                />
+              </Stack>
+            </Box>
+          </Box>
+        </Stack>
+        <Box>
+          <DatePicker
+            value={checkInDate}
+            onChange={setCheckInDate}
+            minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
+            colorPallet="red"
+            showToday={false}
+            showPrevBeforeMinDate={false}
+            children={<Box p="4">
+              <Stack gap="0">
+                <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkInDate')}</Text>
+                <Input
+                  placeholder={checkInDate?.toLocaleDateString(i18n.language) ?? '-'}
+                  fontSize="md"
+                  variant="flushed"
+                  borderBottomWidth={0}
+                  readOnly
+                />
+              </Stack>
+            </Box>}
+          />
         </Box>
-      </VStack>
-    </Container>
+        <Box>
+          <DatePicker
+            value={checkOutDate}
+            onChange={setCheckOutDate}
+            minDate={checkInDate || new Date()}
+            rangeStart={checkInDate}
+            rangeEnd={checkOutDate}
+            colorPallet="red"
+            closeOnSelect={false}
+            showToday={false}
+            showPrevBeforeMinDate={false}
+            children={<Box p="4">
+              <Stack gap="0">
+                <Text fontSize="sm" color="gray.600" fontWeight="medium">{t('demo.checkOutDate')}</Text>
+                <Input
+                  placeholder={checkOutDate?.toLocaleDateString(i18n.language) ?? '-'}
+                  fontSize="md"
+                  variant="flushed"
+                  borderBottomWidth={0}
+                  readOnly
+                />
+              </Stack>
+            </Box>}
+          />
+        </Box>
+        <Box>
+          <Box p="4" >
+            <Stack gap="0">
+              <Text fontSize="sm" color="gray.600" fontWeight="medium">Passengers</Text>
+              <Input
+                placeholder="1 Passenger"
+                fontSize="md"
+                variant="flushed"
+                borderBottomWidth={0}
+              />
+            </Stack>
+          </Box>
+        </Box>
+      </Flex>
+      {/* Footer */}
+      {
+        checkInDate && checkOutDate && (
+          <Box mt="4" p="3" bg="gray.50" rounded="lg">
+            <Text fontSize="sm" fontWeight="medium">{t('demo.bookingSummary')}</Text>
+            <Text fontSize="sm">
+              {t('demo.checkIn')} {checkInDate.toLocaleDateString(i18n.language)}
+            </Text>
+            <Text fontSize="sm">
+              {t('demo.checkOut')} {checkOutDate.toLocaleDateString(i18n.language)}
+            </Text>
+            <Text fontSize="sm">
+              {t('demo.duration')} {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} {t('demo.nights')}
+            </Text>
+          </Box>
+        )
+      }
+    </Container >
   );
 }

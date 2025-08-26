@@ -32,6 +32,8 @@ interface DatePickerProps {
     closeOnSelect?: boolean
     showToday?: boolean
     showPrevBeforeMinDate?: boolean
+    // Custom trigger
+    children?: React.ReactNode
 }
 
 
@@ -48,7 +50,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     colorPallet = "blue",
     closeOnSelect = true,
     showToday = true,
-    showPrevBeforeMinDate = false
+    showPrevBeforeMinDate = false,
+    children
 }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
@@ -373,19 +376,24 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             positioning={{ placement: "bottom-start" }}
         >
             <Popover.Trigger asChild>
-                <Box position="relative" display="inline-block">
-                    <Input
-                        ref={inputRef}
-                        value={value ? formatDate(value) : ''}
-                        placeholder={placeholder || t('datePicker.placeholder')}
-                        readOnly
-                        disabled={disabled}
-                        onClick={() => !disabled && setIsOpen(!isOpen)}
-                        cursor={disabled ? 'not-allowed' : 'pointer'}
-                        pr="10"
-
-                    />
-                </Box>
+                {children ? (
+                    <Box onClick={() => !disabled && setIsOpen(!isOpen)} cursor={disabled ? 'not-allowed' : 'pointer'}>
+                        {children}
+                    </Box>
+                ) : (
+                    <Box position="relative" display="inline-block">
+                        <Input
+                            ref={inputRef}
+                            value={value ? formatDate(value) : ''}
+                            placeholder={placeholder || t('datePicker.placeholder')}
+                            readOnly
+                            disabled={disabled}
+                            onClick={() => !disabled && setIsOpen(!isOpen)}
+                            cursor={disabled ? 'not-allowed' : 'pointer'}
+                            pr="10"
+                        />
+                    </Box>
+                )}
             </Popover.Trigger>
             <Popover.Positioner>
                 <Popover.Content w="fit-content" minW="280px" p="4" rounded="4xl">
