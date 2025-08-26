@@ -109,7 +109,7 @@ export default function Search({ color }: SearchProps) {
             variant="solid"
             colorPalette={color}
         >
-            <Flex gap={2} alignItems="center" border="1px solid red">
+            <Flex gap={2} alignItems="center">
                 <CgSearch />{t('search.buttons.search')}
             </Flex>
         </Button>
@@ -199,11 +199,9 @@ export default function Search({ color }: SearchProps) {
             {layout === 'lg' && (
                 <Box
                     bg="white"
-                    borderWidth="1px"
-                    borderColor="blackAlpha.200"
                     rounded="xl"
                     overflow="hidden"
-                    boxShadow="md"
+                    boxShadow="sm"
                 >
                     <Grid
                         gap={0}
@@ -232,10 +230,8 @@ function GroupCard(props: React.ComponentProps<typeof GridItem>) {
     return (
         <GridItem
             bg="white"
-            borderWidth="1px"
-            borderColor="blackAlpha.200"
             rounded="xl"
-            boxShadow="md"
+            boxShadow="sm"
             overflow="hidden"
             {...props}
         />
@@ -247,11 +243,9 @@ function RowGroup(props: React.ComponentProps<typeof Box>) {
     return (
         <Box
             bg="white"
-            borderWidth="1px"
-            borderColor="blackAlpha.200"
             rounded="xl"
             overflow="hidden"
-            boxShadow="md"
+            boxShadow="sm"
             {...props}
         />
     );
