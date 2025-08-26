@@ -98,14 +98,14 @@ export default function Home() {
       >
         <Grid
           templateColumns={{
-            base: "1fr",                     // Small: 1 column (stacked)
-            md: "1fr 1fr 1fr auto",          // Medium: 3 columns + search button
-            lg: "1fr 1fr 1fr 1fr 1fr auto"   // Large: 5 columns + search button
+            base: "1fr",                           // Small: 1 column (stacked)
+            md: "1fr auto 1fr 1fr auto",           // Medium: origin, swap, destination, dates, search
+            lg: "1fr auto 1fr 1fr 1fr 1fr auto"    // Large: origin, swap, destination, date, return, passengers, search
           }}
           templateRows={{
-            base: "auto auto auto auto auto", // Small: 5 rows (including search)
-            md: "auto auto",                  // Medium: 2 rows
-            lg: "auto"                        // Large: 1 row
+            base: "auto auto auto auto auto auto", // Small: 6 rows (including swap and search)
+            md: "auto auto",                       // Medium: 2 rows
+            lg: "auto"                             // Large: 1 row
           }}
           gap={{
             base: "4",                 // Small: gap between groups
@@ -139,10 +139,45 @@ export default function Home() {
             </Box>
           </Box>
 
-          {/* Destination - Row 2 on small, Group 1 */}
+          {/* Swap Button - Between Origin and Destination */}
           <Box
             gridColumn={{ base: "1", md: "2", lg: "2" }}
             gridRow={{ base: "2", md: "1", lg: "1" }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            p={{ base: "0", md: "2", lg: "2" }}
+            border={{ base: "1px solid", md: "none", lg: "none" }}
+            borderColor={{ base: "gray.200" }}
+            borderRadius={{ base: "full", md: "none", lg: "none" }}
+            bg={{ base: "white", md: "transparent", lg: "transparent" }}
+          >
+            <Box
+              as="button"
+              w={{ base: "12", md: "10", lg: "10" }}
+              h={{ base: "12", md: "10", lg: "10" }}
+              borderRadius="full"
+              border="2px solid"
+              borderColor="gray.300"
+              bg="white"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              _hover={{ borderColor: "blue.400", bg: "blue.50" }}
+              _active={{ borderColor: "blue.500", bg: "blue.100" }}
+              cursor="pointer"
+              transition="all 0.2s"
+            >
+              <Box as="span" fontSize="lg" transform="rotate(90deg)">
+                ⇄
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Destination - Row 3 on small, Group 1 */}
+          <Box
+            gridColumn={{ base: "1", md: "3", lg: "3" }}
+            gridRow={{ base: "3", md: "1", lg: "1" }}
             borderRight={{ lg: "1px solid" }}
             borderRightColor={{ lg: "gray.200" }}
             borderBottom={{ md: "1px solid", lg: "none" }}
@@ -165,10 +200,10 @@ export default function Home() {
             </Box>
           </Box>
 
-          {/* Dates Section - Row 3 on small (combined), Group 2 */}
+          {/* Dates Section - Row 4 on small (combined), Group 2 */}
           <Box
-            gridColumn={{ base: "1", md: "1 / 3", lg: "3 / 5" }}
-            gridRow={{ base: "3", md: "2", lg: "1" }}
+            gridColumn={{ base: "1", md: "4", lg: "4 / 6" }}
+            gridRow={{ base: "4", md: "2", lg: "1" }}
             border={{ base: "1px solid" }}
             borderColor={{ base: "gray.200" }}
             borderRadius={{ base: "lg", md: "none", lg: "none" }}
@@ -179,7 +214,7 @@ export default function Home() {
           >
             {/* Date Picker */}
             <Box
-              gridColumn={{ md: "1", lg: "3" }}
+              gridColumn={{ md: "1", lg: "4" }}
               gridRow={{ md: "1", lg: "1" }}
               borderRight={{ md: "1px solid", lg: "1px solid" }}
               borderRightColor={{ md: "gray.200", lg: "gray.200" }}
@@ -208,7 +243,7 @@ export default function Home() {
 
             {/* Return Date Picker */}
             <Box
-              gridColumn={{ md: "2", lg: "4" }}
+              gridColumn={{ md: "2", lg: "5" }}
               gridRow={{ md: "1", lg: "1" }}
               borderRight={{ lg: "1px solid" }}
               borderRightColor={{ lg: "gray.200" }}
@@ -237,10 +272,10 @@ export default function Home() {
             </Box>
           </Box>
 
-          {/* Passengers - Row 4 on small, Group 3 */}
+          {/* Passengers - Row 5 on small, Group 3 */}
           <Box
-            gridColumn={{ base: "1", md: "3", lg: "5" }}
-            gridRow={{ base: "4", md: "2", lg: "1" }}
+            gridColumn={{ base: "1", md: "4", lg: "6" }}
+            gridRow={{ base: "5", md: "2", lg: "1" }}
             border={{ base: "1px solid" }}
             borderColor={{ base: "gray.200" }}
             borderRadius={{ base: "lg", md: "none", lg: "none" }}
@@ -263,8 +298,8 @@ export default function Home() {
 
           {/* Search Button */}
           <Box
-            gridColumn={{ base: "1", md: "4", lg: "6" }}
-            gridRow={{ base: "5", md: "1 / -1", lg: "1" }}
+            gridColumn={{ base: "1", md: "5", lg: "7" }}
+            gridRow={{ base: "6", md: "1 / -1", lg: "1" }}
             display="flex"
             alignItems="center"
             p={{ base: "0", md: "2", lg: "2" }}
