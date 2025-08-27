@@ -523,7 +523,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
                         <Dialog.Content w="xs" rounded="2xl">
-                            <Dialog.Body border="1px solid" borderColor="gray.200" px="4" display="flex" justifyContent="center">
+                            <Dialog.Body px="4" display="flex" justifyContent="center">
                                 <CalendarContent inDialog={true} />
                             </Dialog.Body>
                         </Dialog.Content>

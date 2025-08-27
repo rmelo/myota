@@ -3,7 +3,7 @@
 import Header from "@/components/Header";
 import Search from "@/components/Search";
 import useCompanySettings from "@/hooks/useCompanySettings";
-import { Box, Container, Flex, Skeleton } from "@chakra-ui/react";
+import { Box, Container, Flex, Skeleton, Stack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -44,7 +44,11 @@ export default function Page() {
           animation: "fade-in 500ms ease-out",
         }}>
         <Header />
-        <Search color={companySettings.color} />
+        <Stack gap={4}>
+          <Box width="full" height="200px" bg="bg.emphasized" rounded="2xl">
+          </Box>
+          <Search color={companySettings.color} />
+        </Stack>
 
         {/* <Code p={4} mt={2} whiteSpace="pre-wrap">
           {JSON.stringify(companySettings, null, 2)}
