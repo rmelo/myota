@@ -358,7 +358,7 @@ export const Passengers: React.FC<PassengersProps> = ({
                 >
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
-                        <Dialog.Content maxW="sm" w="full" mx="4">
+                        <Dialog.Content maxW="sm" w="full" mx="4" rounded="2xl">
                             <Dialog.Header>
                                 <Dialog.Title fontSize="lg" fontWeight="semibold">
                                     {t('passengers.title', 'Passengers')}
