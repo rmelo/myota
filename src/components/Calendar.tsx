@@ -6,13 +6,15 @@ import {
     Box,
     Button,
     Center,
+    Dialog,
     Grid,
     HStack,
     IconButton,
     Input,
     Popover,
     Text,
-    VStack
+    VStack,
+    useBreakpointValue
 } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -60,13 +62,18 @@ export const Calendar: React.FC<CalendarProps> = ({
     children
 }) => {
     const { t } = useTranslation()
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    // Responsive breakpoint - use Dialog on sm and below, Popover on md and above
+    const useDialog = useBreakpointValue({ base: true, md: false })
+
+    // State
     const [isOpen, setIsOpen] = useState(false)
 
     // Use value if provided (controlled), otherwise use defaultValue or current date
     const initialDate = value || defaultValue || new Date()
     const [currentMonth, setCurrentMonth] = useState(initialDate.getMonth())
     const [currentYear, setCurrentYear] = useState(initialDate.getFullYear())
-    const inputRef = useRef<HTMLInputElement>(null)
 
     // Sync calendar view when value changes (for controlled components)
     useEffect(() => {
@@ -254,6 +261,10 @@ export const Calendar: React.FC<CalendarProps> = ({
         }
     }
 
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open)
+    }
+
     const navigateMonth = (direction: 'prev' | 'next') => {
         if (direction === 'prev') {
             if (currentMonth === 0) {
@@ -410,15 +421,85 @@ export const Calendar: React.FC<CalendarProps> = ({
         return days
     }
 
-    return (
-        <Popover.Root
-            open={isOpen}
-            onOpenChange={(e) => setIsOpen(e.open)}
-            positioning={{ placement: "bottom-start", offset: popoverProps?.offset }}
-        >
-            <Popover.Trigger asChild>
+    // ========================================================================
+    // RENDER
+    // ========================================================================
+
+    const CalendarContent = ({ inDialog = false }: { inDialog?: boolean }) => (
+        <VStack gap="2" p={inDialog ? "6" : "0"}>
+            {/* Month/Year Navigation */}
+            <HStack justify="space-between" w="full">
+                {(showPrevBeforeMinDate || canNavigateToPreviousMonth()) && (
+                    <IconButton
+                        aria-label="Previous month"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => navigateMonth('prev')}
+                    >
+                        <ChevronLeftIcon />
+                    </IconButton>
+                )}
+                {(!showPrevBeforeMinDate && !canNavigateToPreviousMonth()) && (
+                    <Box w="8" h="8" /> /* Placeholder to maintain spacing */
+                )}
+                <Text fontSize="sm" fontWeight="semibold">
+                    {MONTHS[currentMonth]} {currentYear}
+                </Text>
+                <IconButton
+                    aria-label="Next month"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => navigateMonth('next')}
+                >
+                    <ChevronRightIcon />
+                </IconButton>
+            </HStack>
+
+            {/* Weekday Headers */}
+            <Grid templateColumns="repeat(7, 1fr)" gap="1" w="full">
+                {WEEKDAYS.map((day) => (
+                    <Center key={day} h="8">
+                        <Text fontSize="xs" fontWeight="medium" color="gray.500">
+                            {day}
+                        </Text>
+                    </Center>
+                ))}
+            </Grid>
+
+            {/* Calendar Days */}
+            <Grid templateColumns="repeat(7, 1fr)" gap="0" w="full" minW="252px">
+                {renderCalendarDays()}
+            </Grid>
+
+            {/* Today Button */}
+            {showToday && (
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                        const today = new Date()
+                        setCurrentMonth(today.getMonth())
+                        setCurrentYear(today.getFullYear())
+                        // Only navigate to today's month/year, don't select the date
+                    }}
+                    w="full"
+                    rounded="xl"
+                >
+                    {t('calendar.today')}
+                </Button>
+            )}
+        </VStack>
+    )
+
+    // Small screens (base to sm): Use Dialog
+    if (useDialog) {
+        return (
+            <>
                 {children ? (
-                    <Box onClick={() => !disabled && setIsOpen(!isOpen)} cursor={disabled ? 'not-allowed' : 'pointer'}>
+                    <Box
+                        cursor={disabled ? 'not-allowed' : 'pointer'}
+                        onClick={() => !disabled && setIsOpen(true)}
+                    >
                         {children}
                     </Box>
                 ) : (
@@ -429,79 +510,66 @@ export const Calendar: React.FC<CalendarProps> = ({
                             placeholder={placeholder || t('calendar.placeholder')}
                             readOnly
                             disabled={disabled}
-                            onClick={() => !disabled && setIsOpen(!isOpen)}
+                            cursor={disabled ? 'not-allowed' : 'pointer'}
+                            onClick={() => !disabled && setIsOpen(true)}
+                            pr="10"
+                        />
+                    </Box>
+                )}
+                <Dialog.Root
+                    open={isOpen}
+                    onOpenChange={(e) => handleOpenChange(e.open)}
+                >
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content maxW="sm" w="full" mx="4">
+                            <Dialog.Header>
+                                <Dialog.Title fontSize="lg" fontWeight="semibold">
+                                    {t('calendar.selectDate', 'Select Date')}
+                                </Dialog.Title>
+                                <Dialog.CloseTrigger />
+                            </Dialog.Header>
+                            <Dialog.Body p="0">
+                                <CalendarContent inDialog={true} />
+                            </Dialog.Body>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Dialog.Root>
+            </>
+        )
+    }
+
+    // Medium screens and above (md+): Use Popover
+    return (
+        <Popover.Root
+            open={isOpen}
+            onOpenChange={(e) => handleOpenChange(e.open)}
+            positioning={{ placement: "bottom-start", offset: popoverProps?.offset }}
+        >
+            <Popover.Trigger asChild>
+                {children ? (
+                    <Box cursor={disabled ? 'not-allowed' : 'pointer'}>
+                        {children}
+                    </Box>
+                ) : (
+                    <Box position="relative" display="inline-block">
+                        <Input
+                            ref={inputRef}
+                            value={(value || defaultValue) ? formatDate(value || defaultValue!) : ''}
+                            placeholder={placeholder || t('calendar.placeholder')}
+                            readOnly
+                            disabled={disabled}
                             cursor={disabled ? 'not-allowed' : 'pointer'}
                             pr="10"
                         />
                     </Box>
                 )}
             </Popover.Trigger>
+
             <Popover.Positioner>
                 <Popover.Content w="fit-content" minW="280px" p="0" rounded="2xl">
                     <Popover.Body>
-                        <VStack gap="2">
-                            {/* Month/Year Navigation */}
-                            <HStack justify="space-between" w="full">
-                                {(showPrevBeforeMinDate || canNavigateToPreviousMonth()) && (
-                                    <IconButton
-                                        aria-label="Previous month"
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => navigateMonth('prev')}
-                                    >
-                                        <ChevronLeftIcon />
-                                    </IconButton>
-                                )}
-                                {(!showPrevBeforeMinDate && !canNavigateToPreviousMonth()) && (
-                                    <Box w="8" h="8" /> /* Placeholder to maintain spacing */
-                                )}
-                                <Text fontSize="sm" fontWeight="semibold">
-                                    {MONTHS[currentMonth]} {currentYear}
-                                </Text>
-                                <IconButton
-                                    aria-label="Next month"
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => navigateMonth('next')}
-                                >
-                                    <ChevronRightIcon />
-                                </IconButton>
-                            </HStack>
-
-                            {/* Weekday Headers */}
-                            <Grid templateColumns="repeat(7, 1fr)" gap="1" w="full">
-                                {WEEKDAYS.map((day) => (
-                                    <Center key={day} h="8">
-                                        <Text fontSize="xs" fontWeight="medium" color="gray.500">
-                                            {day}
-                                        </Text>
-                                    </Center>
-                                ))}
-                            </Grid>
-
-                            {/* Calendar Days */}
-                            <Grid templateColumns="repeat(7, 1fr)" gap="0" w="full" minW="252px">
-                                {renderCalendarDays()}
-                            </Grid>
-
-                            {/* Today Button */}
-                            {showToday && (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => {
-                                        const today = new Date()
-                                        setCurrentMonth(today.getMonth())
-                                        setCurrentYear(today.getFullYear())
-                                        // Only navigate to today's month/year, don't select the date
-                                    }}
-                                    w="full"
-                                    rounded="xl"
-                                >
-                                    {t('calendar.today')}
-                                </Button>
-                            )}
-                        </VStack>
+                        <CalendarContent inDialog={false} />
                     </Popover.Body>
                 </Popover.Content>
             </Popover.Positioner>
