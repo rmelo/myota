@@ -1,7 +1,7 @@
 import { CompaniesId } from "./companies";
 
 export const domains: Record<string, CompaniesId> = {
-    "localhost:3000": "12go",
+    "localhost:3000": "p10",
     "myota10.vercel.app": "p10",
     "myotabr.vercel.app": "deonibus",
     "ota-p10.vercel.app": "p10",

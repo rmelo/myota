@@ -2,12 +2,22 @@
 "use client";
 
 import useCompanySettings from "@/hooks/useCompanySettings";
+import useLanguage from "@/hooks/useLanguage";
 import { Box, ClientOnly, createListCollection, Flex, HStack, Image, Portal, Select, Skeleton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function Header() {
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
     const companySettings = useCompanySettings()
+    const { currentLanguage, changeLanguage, isInitialized } = useLanguage()
+
+    // Debug logging
+    console.log('Header render:', {
+        currentLanguage,
+        isInitialized,
+        companyId: companySettings.companyId,
+        defaultLanguage: companySettings.defaultLanguage
+    })
 
     const languages = createListCollection({
         items: [
@@ -21,41 +31,44 @@ export default function Header() {
 
     const handleLanguageChange = (details: { value: string[] }) => {
         if (details.value.length > 0) {
-            i18n.changeLanguage(details.value[0]);
+            changeLanguage(details.value[0]);
         }
     }
 
-    const LanguageSelector = () => (
-        <Select.Root
-            collection={languages}
-            value={[i18n.language]}
-            onValueChange={handleLanguageChange}
-            size="sm"
-            width="140px"
-        >
-            <Select.HiddenSelect />
-            <Select.Control>
-                <Select.Trigger>
-                    <Select.ValueText />
-                </Select.Trigger>
-                <Select.IndicatorGroup>
-                    <Select.Indicator />
-                </Select.IndicatorGroup>
-            </Select.Control>
-            <Portal>
-                <Select.Positioner>
-                    <Select.Content>
-                        {languages.items.map((language) => (
-                            <Select.Item item={language} key={language.value}>
-                                {language.label}
-                                <Select.ItemIndicator />
-                            </Select.Item>
-                        ))}
-                    </Select.Content>
-                </Select.Positioner>
-            </Portal>
-        </Select.Root>
-    );
+    const LanguageSelector = () => {
+        console.log('LanguageSelector render:', { currentLanguage, value: [currentLanguage] })
+        return (
+            <Select.Root
+                collection={languages}
+                value={[currentLanguage]}
+                onValueChange={handleLanguageChange}
+                size="sm"
+                width="140px"
+            >
+                <Select.HiddenSelect />
+                <Select.Control>
+                    <Select.Trigger>
+                        <Select.ValueText />
+                    </Select.Trigger>
+                    <Select.IndicatorGroup>
+                        <Select.Indicator />
+                    </Select.IndicatorGroup>
+                </Select.Control>
+                <Portal>
+                    <Select.Positioner>
+                        <Select.Content>
+                            {languages.items.map((language) => (
+                                <Select.Item item={language} key={language.value}>
+                                    {language.label}
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                            ))}
+                        </Select.Content>
+                    </Select.Positioner>
+                </Portal>
+            </Select.Root>
+        )
+    }
 
     return (
         <Flex justify="space-between" align="center" py="4" minH="76px">

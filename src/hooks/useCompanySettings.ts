@@ -17,6 +17,7 @@ export interface CompanySettings {
     companyId: string
     displayName: string
     theme: string
+    defaultLanguage: string
     color: ColorPalette
     logos: {
         sm: {
@@ -78,6 +79,7 @@ export function useCompanySettings(): CompanySettings {
             companyId,
             displayName: companyInfo.displayName,
             theme: companyInfo.theme,
+            defaultLanguage: companyInfo.defaultLanguage,
             color,
             logos: {
                 sm: logoSm,
