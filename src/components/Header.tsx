@@ -1,9 +1,10 @@
-import { Box, ClientOnly, createListCollection, Flex, HStack, Portal, Select, Skeleton } from "@chakra-ui/react";
-import Image from "next/image";
+import { getCompany } from "@/core/companies";
+import { getLogoProps } from "@/theme/logos";
+import { Box, ClientOnly, createListCollection, Flex, HStack, Image, Portal, Select, Skeleton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function Header() {
-    const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation()
 
     const languages = createListCollection({
         items: [
@@ -13,13 +14,16 @@ export default function Header() {
             { label: t('language.german'), value: "de" },
             { label: t('language.portuguese'), value: "pt" },
         ],
-    });
+    })
 
     const handleLanguageChange = (details: { value: string[] }) => {
         if (details.value.length > 0) {
             i18n.changeLanguage(details.value[0]);
         }
-    };
+    }
+
+    const company = getCompany(undefined, 'p10')
+    const logo = getLogoProps(company.name, "lg")
 
     const LanguageSelector = () => (
         <Select.Root
@@ -55,13 +59,12 @@ export default function Header() {
 
     return (
         <Flex justify="space-between" align="center" py="8" minH="76px">
-            <Box width="160px" height="40px" position="relative">
+            <Box width={logo.width} height={logo.height} position="relative">
                 <Image
-                    src="https://www.plataforma10.com.ar/publicAssets/images/Plataforma-10-Logo.svg"
+                    src={logo.url}
                     alt="logo"
-                    fill
                     style={{ objectFit: 'contain' }}
-                    priority
+                    rounded={logo.rounded}
                 />
             </Box>
             <HStack justify="space-between" align="center">

@@ -1,6 +1,6 @@
 "use client"
 
-import customSystem from "@/theme";
+import customSystem from "@/theme/theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import "../i18n/config";
 

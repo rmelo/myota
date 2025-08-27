@@ -12,8 +12,8 @@ import {
 export default function SearchBarPage() {
 
     const color: ColorPalette = "red";
-    const color2: ColorPalette = "blue";
-    const color3: ColorPalette = "orange";
+    const color2: ColorPalette = "red";
+    const color3: ColorPalette = "red";
 
     return (
         <Container mt={4}>
