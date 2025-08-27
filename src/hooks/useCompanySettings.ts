@@ -9,6 +9,8 @@ import { useMemo } from 'react'
 const companyColors: Record<string, ColorPalette> = {
     p10: 'p10' as ColorPalette,
     deonibus: 'deonibus' as ColorPalette,
+    '12go': '12go' as ColorPalette,
+    bookaway: 'bookaway' as ColorPalette,
 }
 
 export interface CompanySettings {

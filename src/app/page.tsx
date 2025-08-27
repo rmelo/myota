@@ -3,7 +3,7 @@
 import Header from "@/components/Header";
 import Search from "@/components/Search";
 import useCompanySettings from "@/hooks/useCompanySettings";
-import { Box, Code, Container, Flex, Skeleton } from "@chakra-ui/react";
+import { Box, Container, Flex, Skeleton } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -46,9 +46,9 @@ export default function Page() {
         <Header />
         <Search color={companySettings.color} />
 
-        <Code p={4} mt={2} whiteSpace="pre-wrap">
+        {/* <Code p={4} mt={2} whiteSpace="pre-wrap">
           {JSON.stringify(companySettings, null, 2)}
-        </Code>
+        </Code> */}
       </Box>
     </Container>
   )

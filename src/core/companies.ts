@@ -1,10 +1,6 @@
-type CompaniesId = "p10" | "deonibus" | "12go" | "bookaway";
+import { domains } from "./domains";
 
-const domains: Record<string, CompaniesId> = {
-    "myota10.vercel.app": "p10",
-    "myotabr.vercel.app": "deonibus",
-    "localhost:3000": "p10",
-}
+export type CompaniesId = "p10" | "deonibus" | "12go" | "bookaway";
 
 type CompanySettings = {
     displayName: string;

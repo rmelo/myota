@@ -45,7 +45,7 @@ const customConfig = {
                     200: { value: "#b3d7b3" },
                     300: { value: "#8dc38d" },
                     400: { value: "#67af67" },
-                    500: { value: "#3A8A3A" },
+                    500: { value: "#4CB748" },
                     600: { value: "#337933" },
                     700: { value: "#2b672b" },
                     800: { value: "#225422" },
@@ -63,46 +63,46 @@ const customConfig = {
                     800: { value: "#b34300" },
                     900: { value: "#802f00" },
                 },
-            },
-            semanticTokens: {
-                colors: {
-                    p10: {
-                        solid: { value: "{colors.p10.500}" },
-                        contrast: { value: "white" },
-                        fg: { value: "{colors.p10.700}" },
-                        muted: { value: "{colors.p10.100}" },
-                        subtle: { value: "{colors.p10.200}" },
-                        emphasized: { value: "{colors.p10.300}" },
-                        focusRing: { value: "{colors.p10.500}" },
-                    },
-                    deonibus: {
-                        solid: { value: "{colors.deonibus.500}" },
-                        contrast: { value: "white" },
-                        fg: { value: "{colors.deonibus.700}" },
-                        muted: { value: "{colors.deonibus.100}" },
-                        subtle: { value: "{colors.deonibus.200}" },
-                        emphasized: { value: "{colors.deonibus.300}" },
-                        focusRing: { value: "{colors.deonibus.500}" },
-                    },
-                    '12go': {
-                        solid: { value: "{colors.12go.500}" },
-                        contrast: { value: "white" },
-                        fg: { value: "{colors.12go.700}" },
-                        muted: { value: "{colors.12go.100}" },
-                        subtle: { value: "{colors.12go.200}" },
-                        emphasized: { value: "{colors.12go.300}" },
-                        focusRing: { value: "{colors.12go.500}" },
-                    },
-                    bookaway: {
-                        solid: { value: "{colors.bookaway.500}" },
-                        contrast: { value: "white" },
-                        fg: { value: "{colors.bookaway.700}" },
-                        muted: { value: "{colors.bookaway.100}" },
-                        subtle: { value: "{colors.bookaway.200}" },
-                        emphasized: { value: "{colors.bookaway.300}" },
-                        focusRing: { value: "{colors.bookaway.500}" },
-                    },
-                }
+            }
+        },
+        semanticTokens: {
+            colors: {
+                p10: {
+                    solid: { value: "{colors.p10.500}" },
+                    contrast: { value: "white" },
+                    fg: { value: "{colors.p10.700}" },
+                    muted: { value: "{colors.p10.100}" },
+                    subtle: { value: "{colors.p10.200}" },
+                    emphasized: { value: "{colors.p10.300}" },
+                    focusRing: { value: "{colors.p10.500}" },
+                },
+                deonibus: {
+                    solid: { value: "{colors.deonibus.500}" },
+                    contrast: { value: "white" },
+                    fg: { value: "{colors.deonibus.700}" },
+                    muted: { value: "{colors.deonibus.100}" },
+                    subtle: { value: "{colors.deonibus.200}" },
+                    emphasized: { value: "{colors.deonibus.300}" },
+                    focusRing: { value: "{colors.deonibus.500}" },
+                },
+                '12go': {
+                    solid: { value: "{colors.12go.500}" },
+                    contrast: { value: "white" },
+                    fg: { value: "{colors.12go.700}" },
+                    muted: { value: "{colors.12go.100}" },
+                    subtle: { value: "{colors.12go.200}" },
+                    emphasized: { value: "{colors.12go.300}" },
+                    focusRing: { value: "{colors.12go.500}" },
+                },
+                bookaway: {
+                    solid: { value: "{colors.bookaway.500}" },
+                    contrast: { value: "white" },
+                    fg: { value: "{colors.bookaway.700}" },
+                    muted: { value: "{colors.bookaway.100}" },
+                    subtle: { value: "{colors.bookaway.200}" },
+                    emphasized: { value: "{colors.bookaway.300}" },
+                    focusRing: { value: "{colors.bookaway.500}" },
+                },
             }
         }
     }

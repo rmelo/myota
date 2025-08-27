@@ -58,7 +58,7 @@ export default function Header() {
     );
 
     return (
-        <Flex justify="space-between" align="center" py="8" minH="76px">
+        <Flex justify="space-between" align="center" py="4" minH="76px">
             <Box width={companySettings.logos.lg.width} height={companySettings.logos.lg.height} position="relative">
                 <Image
                     src={companySettings.logos.lg.url}
