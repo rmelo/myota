@@ -2,11 +2,12 @@
 
 import Header from "@/components/Header";
 import Search from "@/components/Search";
+import useCompanySettings from "@/hooks/useCompanySettings";
 import { Box, Container, Flex, Skeleton } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-
+  const companySettings = useCompanySettings()
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Page() {
           animation: "fade-in 500ms ease-out",
         }}>
         <Header />
-        <Search color="p10" />
+        <Search color={companySettings.color} />
       </Box>
     </Container>
   )

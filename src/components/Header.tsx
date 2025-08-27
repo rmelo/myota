@@ -1,10 +1,13 @@
-import { getCompany } from "@/core/companies";
-import { getLogoProps } from "@/theme/logos";
+
+"use client";
+
+import useCompanySettings from "@/hooks/useCompanySettings";
 import { Box, ClientOnly, createListCollection, Flex, HStack, Image, Portal, Select, Skeleton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function Header() {
     const { t, i18n } = useTranslation()
+    const companySettings = useCompanySettings()
 
     const languages = createListCollection({
         items: [
@@ -21,9 +24,6 @@ export default function Header() {
             i18n.changeLanguage(details.value[0]);
         }
     }
-
-    const company = getCompany(undefined, 'p10')
-    const logo = getLogoProps(company.name, "lg")
 
     const LanguageSelector = () => (
         <Select.Root
@@ -59,12 +59,12 @@ export default function Header() {
 
     return (
         <Flex justify="space-between" align="center" py="8" minH="76px">
-            <Box width={logo.width} height={logo.height} position="relative">
+            <Box width={companySettings.logos.lg.width} height={companySettings.logos.lg.height} position="relative">
                 <Image
-                    src={logo.url}
-                    alt="logo"
+                    src={companySettings.logos.lg.url}
+                    alt={`${companySettings.displayName} logo`}
                     style={{ objectFit: 'contain' }}
-                    rounded={logo.rounded}
+                    rounded={companySettings.logos.lg.rounded}
                 />
             </Box>
             <HStack justify="space-between" align="center">
