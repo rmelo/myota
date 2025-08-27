@@ -19,25 +19,28 @@ import { useTranslation } from 'react-i18next'
 
 interface CalendarProps {
     value?: Date
-    defaultValue?: Date // New prop for prefilled value
+    defaultValue?: Date
     onChange?: (date: Date) => void
     placeholder?: string
     disabled?: boolean
     minDate?: Date
     maxDate?: Date
-    // Range selection props
     rangeStart?: Date
     rangeEnd?: Date
     colorPallet?: string
-    // Calendar behavior
     closeOnSelect?: boolean
     showToday?: boolean
     showPrevBeforeMinDate?: boolean
-    // Custom trigger
+    popoverProps?: PopoverProps
     children?: React.ReactNode
 }
 
-
+interface PopoverProps {
+    offset?: {
+        mainAxis?: number | undefined;
+        crossAxis?: number | undefined;
+    }
+}
 
 export const Calendar: React.FC<CalendarProps> = ({
     value,
@@ -53,6 +56,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     closeOnSelect = true,
     showToday = true,
     showPrevBeforeMinDate = false,
+    popoverProps,
     children
 }) => {
     const { t } = useTranslation()
@@ -410,7 +414,7 @@ export const Calendar: React.FC<CalendarProps> = ({
         <Popover.Root
             open={isOpen}
             onOpenChange={(e) => setIsOpen(e.open)}
-            positioning={{ placement: "bottom-start" }}
+            positioning={{ placement: "bottom-start", offset: popoverProps?.offset }}
         >
             <Popover.Trigger asChild>
                 {children ? (

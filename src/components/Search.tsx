@@ -114,6 +114,7 @@ const PassengerField = ({
                 onChange={setPassengers}
                 placeholder={t(fieldConfig.placeholderKey)}
                 colorPallet={color}
+                popoverProps={{ offset: { mainAxis: 15 } }}
             >
                 <FlatInput
                     value={displayText}
@@ -180,6 +181,7 @@ export default function Search({ color }: SearchProps) {
                     rangeStart={rangeStart}
                     rangeEnd={rangeEnd}
                     showToday={false}
+                    popoverProps={{ offset: { mainAxis: 15 } }}
                 >
                     <FlatInput
                         value={value ? value.toLocaleDateString() : ''}
