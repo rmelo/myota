@@ -245,6 +245,11 @@ export const Passengers: React.FC<PassengersProps> = ({
         setIsOpen(false)
     }
 
+    const handleOpenChange = (open: boolean) => {
+        onChange?.(counts)
+        setIsOpen(open)
+    }
+
     // ========================================================================
     // RENDER
     // ========================================================================
@@ -252,7 +257,7 @@ export const Passengers: React.FC<PassengersProps> = ({
     return (
         <Popover.Root
             open={isOpen}
-            onOpenChange={(e) => setIsOpen(e.open)}
+            onOpenChange={(e) => handleOpenChange(e.open)}
             positioning={{ placement: "bottom-start", offset: popoverProps?.offset }}
         >
             <Popover.Trigger asChild>
