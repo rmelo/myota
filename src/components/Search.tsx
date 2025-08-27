@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { CgArrowsExchange, CgArrowsExchangeV, CgSearch } from "react-icons/cg";
 import { Calendar } from "./Calendar";
+import { Passengers } from "./Passengers/Passengers";
 
 type SearchProps = {
     color?: string;
@@ -82,6 +83,49 @@ const searchFields = {
     }
 } as const;
 
+// Move PassengerField OUTSIDE Search component to prevent recreation on re-renders
+const PassengerField = ({
+    passengers,
+    setPassengers,
+    color,
+    t
+}: {
+    passengers: {
+        adults: number;
+        youth: number;
+        seniors: number;
+        students: boolean;
+        wheelchair: boolean;
+    },
+    setPassengers: (passengers: any) => void,
+    color?: string,
+    t: any
+}) => {
+    const fieldConfig = searchFields.passengers;
+    const total = passengers.adults + passengers.youth + passengers.seniors;
+    const displayText = total === 1
+        ? t('passengers.singular', '1 passenger')
+        : t('passengers.plural', `${total} passengers`, { count: total });
+
+    return (
+        <Field label={t(fieldConfig.labelKey)}>
+            <Passengers
+                value={passengers}
+                onChange={setPassengers}
+                placeholder={t(fieldConfig.placeholderKey)}
+                colorPallet={color}
+            >
+                <FlatInput
+                    value={displayText}
+                    placeholder={t(fieldConfig.placeholderKey)}
+                    readOnly
+                    cursor="pointer"
+                />
+            </Passengers>
+        </Field>
+    );
+};
+
 export default function Search({ color }: SearchProps) {
     const { t } = useTranslation();
     const { containerRef, layout } = useContainerBreakpoint();
@@ -96,6 +140,19 @@ export default function Search({ color }: SearchProps) {
 
     const [departureDate, setDepartureDate] = useState<Date | undefined>(getTomorrowDate());
     const [returnDate, setReturnDate] = useState<Date | undefined>();
+
+    // Passengers state management
+    const [passengers, setPassengers] = useState({
+        adults: 1,
+        youth: 0,
+        seniors: 0,
+        students: false,
+        wheelchair: false
+    });
+
+
+
+
 
     // Date field component using Calendar
     const DateField = ({ field }: { field: 'date' | 'returnDate' }) => {
@@ -135,6 +192,8 @@ export default function Search({ color }: SearchProps) {
         );
     };
 
+
+
     // Reusable search field component
     const SearchField = ({ field, ...inputProps }: { field: keyof typeof searchFields } & React.ComponentProps<typeof FlatInput>) => {
         const fieldConfig = searchFields[field];
@@ -142,6 +201,16 @@ export default function Search({ color }: SearchProps) {
         // Use DateField for date and returnDate fields
         if (field === 'date' || field === 'returnDate') {
             return <DateField field={field} />;
+        }
+
+        // Use PassengerField for passengers field
+        if (field === 'passengers') {
+            return <PassengerField
+                passengers={passengers}
+                setPassengers={setPassengers}
+                color={color}
+                t={t}
+            />
         }
 
         return (

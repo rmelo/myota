@@ -21,11 +21,17 @@ import { languageES } from './general/language/es'
 import { languageFR } from './general/language/fr'
 import { languagePT } from './general/language/pt'
 
+import { searchDE } from './components/search/de'
 import { searchEN } from './components/search/en'
 import { searchES } from './components/search/es'
 import { searchFR } from './components/search/fr'
-import { searchDE } from './components/search/de'
 import { searchPT } from './components/search/pt'
+
+import { passengersDE } from './components/passengers/de'
+import { passengersEN } from './components/passengers/en'
+import { passengersES } from './components/passengers/es'
+import { passengersFR } from './components/passengers/fr'
+import { passengersPT } from './components/passengers/pt'
 
 // Organized translation resources
 const resources = {
@@ -33,6 +39,7 @@ const resources = {
         translation: {
             calendar: calendarEN,
             search: searchEN,
+            passengers: passengersEN,
             demo: demoEN,
             language: languageEN
         }
@@ -41,6 +48,7 @@ const resources = {
         translation: {
             calendar: calendarES,
             search: searchES,
+            passengers: passengersES,
             demo: demoES,
             language: languageES
         }
@@ -49,6 +57,7 @@ const resources = {
         translation: {
             calendar: calendarFR,
             search: searchFR,
+            passengers: passengersFR,
             demo: demoFR,
             language: languageFR
         }
@@ -57,6 +66,7 @@ const resources = {
         translation: {
             calendar: calendarDE,
             search: searchDE,
+            passengers: passengersDE,
             demo: demoDE,
             language: languageDE
         }
@@ -65,6 +75,7 @@ const resources = {
         translation: {
             calendar: calendarPT,
             search: searchPT,
+            passengers: passengersPT,
             demo: demoPT,
             language: languagePT
         }
@@ -92,7 +103,7 @@ i18n
         react: {
             useSuspense: false,
         },
-        
+
         // Improve hydration by ensuring consistent language detection
         initImmediate: false,
     })
