@@ -426,7 +426,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     // ========================================================================
 
     const CalendarContent = ({ inDialog = false }: { inDialog?: boolean }) => (
-        <VStack gap="2" p={inDialog ? "6" : "0"}>
+        <VStack width="fit-content" gap="0">
             {/* Month/Year Navigation */}
             <HStack justify="space-between" w="full">
                 {(showPrevBeforeMinDate || canNavigateToPreviousMonth()) && (
@@ -522,14 +522,8 @@ export const Calendar: React.FC<CalendarProps> = ({
                 >
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
-                        <Dialog.Content maxW="sm" w="full" mx="4" rounded="2xl">
-                            <Dialog.Header>
-                                <Dialog.Title fontSize="lg" fontWeight="semibold">
-                                    {t('calendar.selectDate', 'Select Date')}
-                                </Dialog.Title>
-                                <Dialog.CloseTrigger />
-                            </Dialog.Header>
-                            <Dialog.Body p="0">
+                        <Dialog.Content w="xs" rounded="2xl">
+                            <Dialog.Body border="1px solid" borderColor="gray.200" px="4" display="flex" justifyContent="center">
                                 <CalendarContent inDialog={true} />
                             </Dialog.Body>
                         </Dialog.Content>

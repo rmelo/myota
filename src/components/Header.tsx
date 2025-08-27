@@ -3,7 +3,7 @@
 
 import useCompanySettings from "@/hooks/useCompanySettings";
 import useLanguage from "@/hooks/useLanguage";
-import { Box, ClientOnly, createListCollection, Flex, HStack, Image, Portal, Select, Skeleton } from "@chakra-ui/react";
+import { Box, ClientOnly, createListCollection, Flex, HStack, Image, Portal, Select, Skeleton, useBreakpointValue } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function Header() {
@@ -34,6 +34,12 @@ export default function Header() {
             changeLanguage(details.value[0]);
         }
     }
+
+    const breakpointLogo = useBreakpointValue({
+        base: companySettings.logos.sm,
+        md: companySettings.logos.lg,
+        lg: companySettings.logos.lg,
+    })
 
     const LanguageSelector = () => {
         console.log('LanguageSelector render:', { currentLanguage, value: [currentLanguage] })
@@ -72,12 +78,12 @@ export default function Header() {
 
     return (
         <Flex justify="space-between" align="center" py="4" minH="76px">
-            <Box width={companySettings.logos.lg.width} height={companySettings.logos.lg.height} position="relative">
+            <Box width={breakpointLogo?.width} height={breakpointLogo?.height} position="relative">
                 <Image
-                    src={companySettings.logos.lg.url}
+                    src={breakpointLogo?.url}
                     alt={`${companySettings.displayName} logo`}
                     style={{ objectFit: 'contain' }}
-                    rounded={companySettings.logos.lg.rounded}
+                    rounded={breakpointLogo?.rounded}
                 />
             </Box>
             <HStack justify="space-between" align="center">
