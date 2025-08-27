@@ -1,9 +1,9 @@
-type CompaniesId = "p10" | "deonibus";
+type CompaniesId = "p10" | "deonibus" | "12go" | "bookaway";
 
 const domains: Record<string, CompaniesId> = {
     "myota10.vercel.app": "p10",
     "myotabr.vercel.app": "deonibus",
-    "localhost:3000": "deonibus",
+    "localhost:3000": "p10",
 }
 
 type CompanySettings = {
@@ -19,7 +19,15 @@ const companies: Record<CompaniesId, CompanySettings> = {
     deonibus: {
         displayName: "DeÔnibus",
         theme: "deonibus",
-    }
+    },
+    '12go': {
+        displayName: "12go",
+        theme: "12go",
+    },
+    bookaway: {
+        displayName: "Bookaway",
+        theme: "bookaway",
+    },
 }
 
 export function getCompanyIdByDomain(domain: string): CompaniesId {
