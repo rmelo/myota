@@ -48,28 +48,31 @@ export function useLanguage() {
             localStorage: localStorage.getItem('i18nextLng')
         })
 
-        // Wait for both i18n and company settings to be ready
+                // Wait for both i18n and company settings to be ready
         if (!isInitialized && companySettings.defaultLanguage && i18n.isInitialized) {
             const savedLanguage = localStorage.getItem('i18nextLng')
-
-            console.log('Checking language state:', {
-                savedLanguage,
+            const userLanguageChoice = localStorage.getItem('userLanguageChoice') // Our custom flag
+            
+            console.log('Checking language state:', { 
+                savedLanguage, 
+                userLanguageChoice,
                 companyDefault: companySettings.defaultLanguage,
-                i18nLanguage: i18n.language
+                i18nLanguage: i18n.language 
             })
-
-            // If no language in localStorage or it's the default fallback, set company default
-            if (!savedLanguage || savedLanguage === 'undefined' || savedLanguage === 'cimode' || savedLanguage === 'dev') {
-                console.log('No user language preference found, setting company default:', companySettings.defaultLanguage)
+            
+            // If no user choice flag exists, it means language was set automatically (not by user)
+            if (!userLanguageChoice) {
+                console.log('No user language choice found, setting company default:', companySettings.defaultLanguage)
                 i18n.changeLanguage(companySettings.defaultLanguage).then(() => {
                     setCurrentLanguage(companySettings.defaultLanguage)
+                    // Mark that this is now the user's "default" choice (company default)
+                    localStorage.setItem('userLanguageChoice', 'true')
                 })
             } else {
-                // Use the saved language
-                console.log('Using saved language preference:', savedLanguage)
-                setCurrentLanguage(savedLanguage)
-                // Make sure i18n is also set to this language
-                if (i18n.language !== savedLanguage) {
+                // User has made a choice, respect it
+                console.log('Using user language preference:', savedLanguage)
+                setCurrentLanguage(savedLanguage || i18n.language)
+                if (savedLanguage && i18n.language !== savedLanguage) {
                     i18n.changeLanguage(savedLanguage)
                 }
             }
@@ -91,9 +94,11 @@ export function useLanguage() {
     }, [i18n])
 
     const changeLanguage = (language: string) => {
-        console.log('Changing language to:', language)
+        console.log('User changing language to:', language)
         i18n.changeLanguage(language)
         setCurrentLanguage(language)
+        // Mark that user has made a language choice
+        localStorage.setItem('userLanguageChoice', 'true')
     }
 
     return {
