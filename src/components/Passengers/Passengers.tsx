@@ -3,6 +3,7 @@
 import {
     Box,
     Button,
+    Dialog,
     Flex,
     HStack,
     IconButton,
@@ -10,7 +11,8 @@ import {
     Popover,
     Switch,
     Text,
-    VStack
+    VStack,
+    useBreakpointValue
 } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -196,6 +198,9 @@ export const Passengers: React.FC<PassengersProps> = ({
     const { t } = useTranslation()
     const inputRef = useRef<HTMLInputElement>(null)
 
+    // Responsive breakpoint - use Dialog on sm and below, Popover on md and above
+    const useDialog = useBreakpointValue({ base: true, md: false })
+
     // State
     const [isOpen, setIsOpen] = useState(false)
     const [counts, setCounts] = useState<PassengerCounts>(value || DEFAULT_COUNTS)
@@ -254,6 +259,123 @@ export const Passengers: React.FC<PassengersProps> = ({
     // RENDER
     // ========================================================================
 
+    const PassengersContent = ({ inDialog = false }: { inDialog?: boolean }) => (
+        <VStack gap="0" align="stretch" p={inDialog ? "6" : "6"}>
+            {/* Age-based Counters */}
+            <Counter
+                title={t('passengers.adults', 'Adults')}
+                subtitle={t('passengers.adultsAge', '19-59 years')}
+                count={counts.adults}
+                onIncrement={() => handleCountChange('adults', true)}
+                onDecrement={() => handleCountChange('adults', false)}
+                canDecrement={counts.adults > 1}
+                disabled={disabled}
+            />
+
+            <Counter
+                title={t('passengers.youth', 'Youth')}
+                subtitle={t('passengers.youthAge', '0-18 years')}
+                count={counts.youth}
+                onIncrement={() => handleCountChange('youth', true)}
+                onDecrement={() => handleCountChange('youth', false)}
+                canDecrement={counts.youth > 0}
+                disabled={disabled}
+            />
+
+            <Counter
+                title={t('passengers.seniors', 'Seniors')}
+                subtitle={t('passengers.seniorsAge', '60+ years')}
+                count={counts.seniors}
+                onIncrement={() => handleCountChange('seniors', true)}
+                onDecrement={() => handleCountChange('seniors', false)}
+                canDecrement={counts.seniors > 0}
+                disabled={disabled}
+            />
+
+            {/* Special Requirements */}
+            <Box borderTopWidth="1px" borderColor="gray.200" mt="4" pt="4">
+                <Toggle
+                    title={t('passengers.students', 'Students')}
+                    subtitle={t('passengers.studentsDesc', 'Discounts may apply for passengers with a valid student ID.')}
+                    checked={counts.students}
+                    onChange={(checked) => handleToggleChange('students', checked)}
+                    disabled={disabled}
+                    colorPallet={colorPallet}
+                />
+
+                <Toggle
+                    title={t('passengers.wheelchair', 'Wheelchair')}
+                    subtitle={t('passengers.wheelchairDesc', 'Passengers traveling with a wheelchair')}
+                    checked={counts.wheelchair}
+                    onChange={(checked) => handleToggleChange('wheelchair', checked)}
+                    disabled={disabled}
+                    colorPallet={colorPallet}
+                />
+            </Box>
+
+            {/* Done Button */}
+            <Button
+                colorPalette="gray"
+                onClick={handleDone}
+                w="full"
+                mt="6"
+                variant="outline"
+                rounded="full"
+            >
+                {t('passengers.done', 'Done')}
+            </Button>
+        </VStack>
+    )
+
+    // Small screens (base to sm): Use Dialog
+    if (useDialog) {
+        return (
+            <>
+                {children ? (
+                    <Box
+                        cursor={disabled ? 'not-allowed' : 'pointer'}
+                        onClick={() => !disabled && setIsOpen(true)}
+                    >
+                        {children}
+                    </Box>
+                ) : (
+                    <Box position="relative" display="inline-block">
+                        <Input
+                            ref={inputRef}
+                            value={formatPassengerText(counts, t)}
+                            placeholder={placeholder || t('passengers.placeholder', 'Select passengers')}
+                            readOnly
+                            disabled={disabled}
+                            cursor={disabled ? 'not-allowed' : 'pointer'}
+                            onClick={() => !disabled && setIsOpen(true)}
+                            pr="10"
+                        />
+                    </Box>
+                )}
+                <Dialog.Root
+                    open={isOpen}
+                    onOpenChange={(e) => handleOpenChange(e.open)}
+                >
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content maxW="sm" w="full" mx="4">
+                            <Dialog.Header>
+                                <Dialog.Title fontSize="lg" fontWeight="semibold">
+                                    {t('passengers.title', 'Passengers')}
+                                </Dialog.Title>
+                                <Dialog.CloseTrigger />
+                            </Dialog.Header>
+                            <Dialog.Body p="0">
+                                <PassengersContent inDialog={true} />
+                            </Dialog.Body>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Dialog.Root>
+            </>
+        )
+    }
+
+    // Medium screens and above (md+): Use Popover
     return (
         <Popover.Root
             open={isOpen}
@@ -283,70 +405,7 @@ export const Passengers: React.FC<PassengersProps> = ({
             <Popover.Positioner>
                 <Popover.Content w="350px" p="0" rounded="2xl">
                     <Popover.Body>
-                        <VStack gap="0" align="stretch">
-                            {/* Age-based Counters */}
-                            <Counter
-                                title={t('passengers.adults', 'Adults')}
-                                subtitle={t('passengers.adultsAge', '19-59 years')}
-                                count={counts.adults}
-                                onIncrement={() => handleCountChange('adults', true)}
-                                onDecrement={() => handleCountChange('adults', false)}
-                                canDecrement={counts.adults > 1}
-                                disabled={disabled}
-                            />
-
-                            <Counter
-                                title={t('passengers.youth', 'Youth')}
-                                subtitle={t('passengers.youthAge', '0-18 years')}
-                                count={counts.youth}
-                                onIncrement={() => handleCountChange('youth', true)}
-                                onDecrement={() => handleCountChange('youth', false)}
-                                canDecrement={counts.youth > 0}
-                                disabled={disabled}
-                            />
-
-                            <Counter
-                                title={t('passengers.seniors', 'Seniors')}
-                                subtitle={t('passengers.seniorsAge', '60+ years')}
-                                count={counts.seniors}
-                                onIncrement={() => handleCountChange('seniors', true)}
-                                onDecrement={() => handleCountChange('seniors', false)}
-                                canDecrement={counts.seniors > 0}
-                                disabled={disabled}
-                            />
-
-                            {/* Special Requirements */}
-                            <Box borderTopWidth="1px" borderColor="gray.200" mt="4" pt="4">
-                                <Toggle
-                                    title={t('passengers.students', 'Students')}
-                                    subtitle={t('passengers.studentsDesc', 'Discounts may apply for passengers with a valid student ID.')}
-                                    checked={counts.students}
-                                    onChange={(checked) => handleToggleChange('students', checked)}
-                                    disabled={disabled}
-                                    colorPallet={colorPallet}
-                                />
-
-                                <Toggle
-                                    title={t('passengers.wheelchair', 'Wheelchair')}
-                                    subtitle={t('passengers.wheelchairDesc', 'Passengers traveling with a wheelchair')}
-                                    checked={counts.wheelchair}
-                                    onChange={(checked) => handleToggleChange('wheelchair', checked)}
-                                    disabled={disabled}
-                                    colorPallet={colorPallet}
-                                />
-                            </Box>
-
-                            {/* Done Button */}
-                            <Button
-                                colorPalette={colorPallet}
-                                onClick={handleDone}
-                                w="full"
-                                mt="6"
-                                rounded="full"
-                            >
-                                {t('passengers.done', 'Done')}
-                            </Button>
-                        </VStack>
+                        <PassengersContent inDialog={false} />
                     </Popover.Body>
                 </Popover.Content>
             </Popover.Positioner>

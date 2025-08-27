@@ -2,6 +2,7 @@ export const passengersEN = {
     singular: "1 passenger",
     plural: "{{count}} passengers",
     placeholder: "Select passengers",
+    title: "Passengers",
     adults: "Adults",
     adultsAge: "19-59 years",
     youth: "Youth",
