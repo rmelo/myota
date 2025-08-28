@@ -49,10 +49,6 @@ export default function Page() {
           </Box>
           <Search color={companySettings.color} />
         </Stack>
-
-        {/* <Code p={4} mt={2} whiteSpace="pre-wrap">
-          {JSON.stringify(companySettings, null, 2)}
-        </Code> */}
       </Box>
     </Container>
   )

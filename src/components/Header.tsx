@@ -42,18 +42,17 @@ export default function Header() {
     })
 
     const LanguageSelector = () => {
-        console.log('LanguageSelector render:', { currentLanguage, value: [currentLanguage] })
         return (
             <Select.Root
                 collection={languages}
                 value={[currentLanguage]}
                 onValueChange={handleLanguageChange}
                 size="sm"
-                width="140px"
+                width="100px"
             >
                 <Select.HiddenSelect />
                 <Select.Control>
-                    <Select.Trigger>
+                    <Select.Trigger border="none">
                         <Select.ValueText />
                     </Select.Trigger>
                     <Select.IndicatorGroup>
